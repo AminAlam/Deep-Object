@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HomeWindow</class>
+ <widget class="QWidget" name="HomeWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>767</width>
+    <height>646</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget
+{
+background : white;
+}</string>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>761</width>
+     <height>641</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Arial</family>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:black;
+
+
+
+QDoubleSpinBox
+{
+background-color: rgb(200, 200, 200);
+color:black;
+}
+QDoubleSpinBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+QListWidget
+{
+background-color: rgb(200, 200, 200);
+color:black;
+}
+QListWidget:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+QListView{
+background-color:  rgb(255, 255, 255);
+  color: white;
+}
+
+QComboBox{
+background-color:  rgb(200, 200, 200);
+color:black;
+}
+QComboBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+
+QTextBrowser
+{
+background-color: black;
+color:white;
+border-radius: 5px;
+}
+
+QPushButton
+{
+background-color: rgb(200, 200, 200);
+border-radius: 8px;
+color:black;
+
+}
+QPushButton:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+
+}
+
+
+QSpinBox
+{
+background-color: rgb(200, 200, 200);
+
+color:balck;
+}
+QSpinBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+
+}
+
+
+
+QLabel
+{
+color: white;
+}
+
+
+</string>
+   </property>
+   <widget class="QPushButton" name="load_image">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>50</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Load Image</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="loaded_image_plot" native="true">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>10</y>
+      <width>291</width>
+      <height>271</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget
+{
+    background-color: white;
+}
+
+
+</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
