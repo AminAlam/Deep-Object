@@ -14,13 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_HomeWindow(object):
     def setupUi(self, HomeWindow):
         HomeWindow.setObjectName("HomeWindow")
-        HomeWindow.resize(767, 646)
-        HomeWindow.setStyleSheet("QWidget\n"
-"{\n"
-"background : white;\n"
-"}")
+        HomeWindow.resize(1089, 788)
+        HomeWindow.setStyleSheet("")
         self.widget = QtWidgets.QWidget(HomeWindow)
-        self.widget.setGeometry(QtCore.QRect(0, 0, 761, 641))
+        self.widget.setGeometry(QtCore.QRect(0, -50, 1091, 801))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.widget.setFont(font)
@@ -109,16 +106,32 @@ class Ui_HomeWindow(object):
         font.setFamily("Arial")
         self.load_image.setFont(font)
         self.load_image.setObjectName("load_image")
-        self.loaded_image_plot = QtWidgets.QWidget(self.widget)
-        self.loaded_image_plot.setGeometry(QtCore.QRect(430, 10, 291, 271))
-        self.loaded_image_plot.setStyleSheet("QWidget\n"
+        self.loaded_image_widget = QtWidgets.QWidget(self.widget)
+        self.loaded_image_widget.setGeometry(QtCore.QRect(550, 30, 511, 381))
+        self.loaded_image_widget.setStyleSheet("QWidget\n"
 "{\n"
 "    background-color: white;\n"
 "}\n"
 "\n"
 "\n"
 "")
-        self.loaded_image_plot.setObjectName("loaded_image_plot")
+        self.loaded_image_widget.setObjectName("loaded_image_widget")
+        self.image_slider = QtWidgets.QSlider(self.widget)
+        self.image_slider.setGeometry(QtCore.QRect(540, 440, 511, 22))
+        self.image_slider.setAcceptDrops(False)
+        self.image_slider.setAutoFillBackground(False)
+        self.image_slider.setMaximum(10)
+        self.image_slider.setOrientation(QtCore.Qt.Horizontal)
+        self.image_slider.setInvertedAppearance(False)
+        self.image_slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+        self.image_slider.setTickInterval(0)
+        self.image_slider.setObjectName("image_slider")
+        self.label = QtWidgets.QLabel(self.widget)
+        self.label.setGeometry(QtCore.QRect(780, 420, 131, 16))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label.setFont(font)
+        self.label.setObjectName("label")
 
         self.retranslateUi(HomeWindow)
         QtCore.QMetaObject.connectSlotsByName(HomeWindow)
@@ -126,7 +139,8 @@ class Ui_HomeWindow(object):
     def retranslateUi(self, HomeWindow):
         _translate = QtCore.QCoreApplication.translate
         HomeWindow.setWindowTitle(_translate("HomeWindow", "Form"))
-        self.load_image.setText(_translate("HomeWindow", "Load Image"))
+        self.load_image.setText(_translate("HomeWindow", "Load Images"))
+        self.label.setText(_translate("HomeWindow", "Image Number"))
 
 
 if __name__ == "__main__":

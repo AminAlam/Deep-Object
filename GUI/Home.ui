@@ -6,26 +6,23 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>767</width>
-    <height>646</height>
+    <width>1089</width>
+    <height>788</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">QWidget
-{
-background : white;
-}</string>
+   <string notr="true"/>
   </property>
   <widget class="QWidget" name="widget" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>0</y>
-     <width>761</width>
-     <height>641</height>
+     <y>-50</y>
+     <width>1091</width>
+     <height>801</height>
     </rect>
    </property>
    <property name="font">
@@ -128,16 +125,16 @@ color: white;
      </font>
     </property>
     <property name="text">
-     <string>Load Image</string>
+     <string>Load Images</string>
     </property>
    </widget>
-   <widget class="QWidget" name="loaded_image_plot" native="true">
+   <widget class="QWidget" name="loaded_image_widget" native="true">
     <property name="geometry">
      <rect>
-      <x>430</x>
-      <y>10</y>
-      <width>291</width>
-      <height>271</height>
+      <x>550</x>
+      <y>30</y>
+      <width>511</width>
+      <height>381</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -148,6 +145,55 @@ color: white;
 
 
 </string>
+    </property>
+   </widget>
+   <widget class="QSlider" name="image_slider">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>440</y>
+      <width>511</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="acceptDrops">
+     <bool>false</bool>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="maximum">
+     <number>10</number>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+    <property name="invertedAppearance">
+     <bool>false</bool>
+    </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksBelow</enum>
+    </property>
+    <property name="tickInterval">
+     <number>0</number>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>420</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Image Number</string>
     </property>
    </widget>
   </widget>
