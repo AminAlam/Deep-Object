@@ -1,6 +1,7 @@
 import mat73
-def convertMat2Png():
-    path2dataset = "nyu_depth_v2_labeled.mat"
+import matplotlib.pyplot as plt
+
+def mat2png(path2dataset):
     images_and_labels = mat73.loadmat(path2dataset)
 
     for i in range(images_and_labels['images'].shape[3]):
