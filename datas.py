@@ -1,39 +1,75 @@
-class FlickrDataset(Dataset):
-    def __init__(self, root_dir, captions_file, transform=None, freq_threshold=1):
-        self.root_dir = root_dir
+import torch
+from torch.utils.data import DataLoader, Dataset, random_split
+import mat73
 
-        self.df = pd.read_csv(captions_file, error_bad_lines=False, names=['image', 'caption'], header=None, sep='\t')
+
+class ODD_Dataset(Dataset):
+
+    '''
+    This class loads images, depths, and labels from .mat file.
+    
+    init inputs = path to .mat file, torch vision transfomr(optional).
+    '''
+
+    def __init__(self, path2dataset, transform=None):
+        
+        self.path2dataset = path2dataset
         self.transform = transform
-        # Get img, caption columns
-        self.df["image"] = self.df["image"].apply(lambda x: self.removeNumbers(x))
-        self.imgs = self.df["image"]
+        self.load_mat()
 
-        self.captions = self.df["caption"]
 
-        # Initialize vocabulary and build vocab
-        self.vocab = Vocabulary(freq_threshold)
-        self.vocab.build_vocabulary(self.captions.tolist())
+    def load_mat(self):
+        datas = mat73.loadmat(self.path2dataset)
+        self.images = datas['images']
+        self.depths = datas['depths']
+        self.labels = datas['labels']
+        del datas
 
-    def removeNumbers(self, image):
-          image = image.split('#')[0]
-          check = image.split('.')
-          if len(check)>2:
-            image = check[0]+"."+check[1]
-          return image
 
     def __len__(self):
-        return len(self.df)
+        return len(self.images)
+
 
     def __getitem__(self, index):
-        caption = self.captions[index]
-        img_id = self.imgs[index]
-        img = Image.open(os.path.join(self.root_dir, img_id)).convert("RGB")
+        img = self.images[:,:,:index]
+        depth = self.depths[:,:,index]
+        label = self.labels[:,:,index]
 
         if self.transform is not None:
             img = self.transform(img)
 
-        numericalized_caption = [self.vocab.stoi["<SOS>"]]
-        numericalized_caption += self.vocab.numericalize(caption)
-        numericalized_caption.append(self.vocab.stoi["<EOS>"])
+        return img, depth, label
 
-        return img, torch.tensor(numericalized_caption)
+def get_loader(
+    path2dataset, transform=None, batch_size=32, 
+    num_workers=0, shuffle=True, pin_memory=True, train_test_ratio=0.0):
+    '''
+    This function returns train and test data loaders.
+    inputs = path to .mat file, torch vision transfomr(optional), batch_size, num_workers.
+    outputs = returns train dataloader, dataset train, test dataloader, dataset test
+    '''
+    dataset = ODD_Dataset(path2dataset)
+
+    dataset_train, dataset_test = random_split(dataset, 
+                                  [int(len(dataset)*train_test_ratio), 
+                                  len(dataset)-int(len(dataset)*train_test_ratio)],
+                                  generator=torch.Generator().manual_seed(42))
+
+
+    train_loader = DataLoader(
+        dataset = dataset_train,
+        batch_size = batch_size,
+        num_workers = num_workers,
+        shuffle = shuffle,
+        pin_memory = pin_memory,
+    )
+
+    test_loader = DataLoader(
+        dataset = dataset_test,
+        batch_size = batch_size,
+        num_workers = num_workers,
+        shuffle = shuffle,
+        pin_memory = pin_memory,
+    ) 
+
+    return train_loader, dataset_train, test_loader, dataset_test
