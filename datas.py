@@ -1,9 +1,13 @@
 import torch
 from torch.utils.data import DataLoader, Dataset, random_split
+import torchvision.transforms as transforms
 from PIL import Image
 import mat73
+import numpy as np
 import os
+import random
 
+import torchvision.transforms.functional as TF
 
 class ODD_Dataset(Dataset):
 
@@ -18,7 +22,6 @@ class ODD_Dataset(Dataset):
         self.root_folder = root_folder
         self.transform = transform
         self.num_datas = num_datas
-        
         self.image_ids = ['imgNo{0}.png'.format(i) for i in range(self.num_datas)]
         self.label_ids = ['labelNo{0}.png'.format(i) for i in range(self.num_datas)]
         self.depth_ids = ['depthNo{0}.png'.format(i) for i in range(self.num_datas)]
@@ -35,12 +38,28 @@ class ODD_Dataset(Dataset):
         labels = Image.open(os.path.join(self.root_folder, label_id)).convert("RGB")
         depths = Image.open(os.path.join(self.root_folder, depth_id)).convert("RGB")
 
+        resize = transforms.Resize(640)
         if self.transform is not None:
-            images = self.transform(images)
-            depths = self.transform(depths)
-            labels = self.transform(labels)
+            images  = resize(images)
+            labels = resize(labels)
+            depths = resize(depths)
 
-        return images, depths, labels
+            if random.random() > 0.5:
+                images = TF.hflip(images)
+                labels = TF.hflip(labels)
+                depths = TF.hflip(depths)
+
+            images = self.transform(images)
+            labels = self.transform(labels)
+            depths = self.transform(depths)
+
+            i, j, h, w = transforms.RandomCrop.get_params(images, output_size=(640, 640))
+
+            images = TF.crop(images, i, j, h, w)
+            labels = TF.crop(labels, i, j, h, w)
+            depths = TF.crop(depths, i, j, h, w)
+
+        return images, labels, depths
 
 
 
@@ -75,4 +94,4 @@ def get_loader(
         pin_memory = pin_memory,
     ) 
 
-    return train_loader, dataset_train, test_loader, dataset_test
+    return train_loader , test_loader

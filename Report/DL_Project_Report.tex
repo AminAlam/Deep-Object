@@ -213,4 +213,70 @@ It is noteworthy to mention that Matlab isn't open source and you should buy thi
 
 \newpage
 
+\section{Datas}
+\subsection{Converting Datas}
+We converted the datas which were in the .mat format to the .png  for better RAM management. This way it is possible to load the images directly from the hard drive in each itteration.
+
+\subsection{Loading Datas}
+Figure \ref{fig:sample_datas} shows a sample from the dataset.
+
+
+
+
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/imgNo14.png}
+    \caption{Image No 1}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/depthNo14.png}
+    \caption{Depth No 1}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/labelNo14.png}
+    \caption{Label No 1}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/imgNo12.png}
+    \caption{Image No 2}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/depthNo12.png}
+    \caption{Depth No 2}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/labelNo12.png}
+    \caption{Label No 2}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/imgNo8.png}
+    \caption{Image No 3}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/depthNo8.png}
+    \caption{Depth No 3}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/labelNo8.png}
+    \caption{Label No 3}
+  \end{subfigure}
+  \caption{Loss, Accuracy and Confusion Matrix for 1 Directional LSTM}
+  \label{fig:sample_datas}
+\end{figure}
+
+As can be seen in Figure \ref{fig:sample_datas}, dataset contains image, label, and depth.
+
+
+
+
+
+
+
+
+
+
+
+
 \end{document}
