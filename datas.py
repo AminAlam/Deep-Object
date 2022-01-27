@@ -6,6 +6,7 @@ import mat73
 import numpy as np
 import os
 import random
+import utils
 
 import torchvision.transforms.functional as TF
 
@@ -20,8 +21,9 @@ class ODD_Dataset(Dataset):
     def __init__(self, root_folder, num_datas, transform=None):
         
         self.root_folder = root_folder
-        self.transform = transform
+        self.transforms = transform
         self.num_datas = num_datas
+
         self.image_ids = ['imgNo{0}.png'.format(i) for i in range(self.num_datas)]
         self.label_ids = ['labelNo{0}.png'.format(i) for i in range(self.num_datas)]
         self.depth_ids = ['depthNo{0}.png'.format(i) for i in range(self.num_datas)]
@@ -35,31 +37,44 @@ class ODD_Dataset(Dataset):
         depth_id = self.depth_ids[index]
 
         images = Image.open(os.path.join(self.root_folder, img_id)).convert("RGB")
-        labels = Image.open(os.path.join(self.root_folder, label_id)).convert("RGB")
+        mask = Image.open(os.path.join(self.root_folder, label_id)).convert("RGB")
         depths = Image.open(os.path.join(self.root_folder, depth_id)).convert("RGB")
 
-        resize = transforms.Resize(640)
-        if self.transform is not None:
-            images  = resize(images)
-            labels = resize(labels)
-            depths = resize(depths)
+        mask = np.array(mask)[:,:,1]
+        obj_ids = np.unique(mask)
+        obj_ids = obj_ids[1:]
+        masks = mask == obj_ids[:, None, None]
+        num_objs = len(obj_ids)
+        boxes = []
+        for i in range(num_objs):
+            pos = np.where(masks[i])
+            xmin = np.min(pos[1])
+            xmax = np.max(pos[1])
+            ymin = np.min(pos[0])
+            ymax = np.max(pos[0])
+            boxes.append([xmin, ymin, xmax, ymax])
 
-            if random.random() > 0.5:
-                images = TF.hflip(images)
-                labels = TF.hflip(labels)
-                depths = TF.hflip(depths)
+        obj_ids = torch.as_tensor(obj_ids, dtype=torch.int64)
+        boxes = torch.as_tensor(boxes, dtype=torch.float32)
+        # suppose all instances are not crowd
+        iscrowd = torch.zeros((num_objs,), dtype=torch.int64)
+        image_id = torch.tensor([index])
+        area = (boxes[:, 3] - boxes[:, 1]) * (boxes[:, 2] - boxes[:, 0])
+        masks = torch.as_tensor(masks, dtype=torch.uint8)
+        
+        target = {}
+        target["boxes"] = boxes
+        target["labels"] = obj_ids
+        target["masks"] = masks
+        target["image_id"] = image_id
+        target["area"] = area
+        target["iscrowd"] = iscrowd
 
-            images = self.transform(images)
-            labels = self.transform(labels)
-            depths = self.transform(depths)
 
-            i, j, h, w = transforms.RandomCrop.get_params(images, output_size=(640, 640))
+        if self.transforms is not None:
+            images, target = self.transforms(images, target)
 
-            images = TF.crop(images, i, j, h, w)
-            labels = TF.crop(labels, i, j, h, w)
-            depths = TF.crop(depths, i, j, h, w)
-
-        return images, labels, depths
+        return images, target
 
 
 
@@ -84,6 +99,7 @@ def get_loader(
         num_workers = num_workers,
         shuffle = shuffle,
         pin_memory = pin_memory,
+        collate_fn=utils.collate_fn,
     )
 
     test_loader = DataLoader(
@@ -92,6 +108,7 @@ def get_loader(
         num_workers = num_workers,
         shuffle = shuffle,
         pin_memory = pin_memory,
+        collate_fn=utils.collate_fn,
     ) 
 
     return train_loader , test_loader
