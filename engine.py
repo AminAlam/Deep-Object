@@ -9,7 +9,11 @@ from coco_eval import CocoEvaluator
 from coco_utils import get_coco_api_from_dataset
 
 
-def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, scaler=None):
+def write_log(file_path, stat):
+  with open(file_path, 'a') as f:
+    f.write("{0}\n".format(stat))
+
+def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter("lr", utils.SmoothedValue(window_size=1, fmt="{value:.6f}"))
@@ -36,6 +40,9 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, sc
         losses_reduced = sum(loss for loss in loss_dict_reduced.values())
 
         loss_value = losses_reduced.item()
+
+        if logs_path != None:
+            write_log(logs_path, loss_value)
 
         if not math.isfinite(loss_value):
             print(f"Loss is {loss_value}, stopping training")
