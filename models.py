@@ -1,32 +1,52 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
+import torchvision
+from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
+from torchvision.models.detection.mask_rcnn import MaskRCNNPredictor
 
 class DepthEstimation(nn.Module):
     '''
-    Class performs Depth.
+    Class performs Depth Estimation.
     '''
 
     def __init__(self):
         super(DepthEstimation, self).__init__()
 
     def forward(self, images):
-
+        pass
 
 class ObjectDetector(nn.Module):
     '''
     Class performs Object Detection.
     '''
-
-    def __init__(self):
+    def __init__(self, num_classes):
         super(ObjectDetector, self).__init__()
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=capacity, kernel_size=4, stride=2, padding=1) # out: c x 14 x 14
-        self.conv2 = nn.Conv2d(in_channels=c, out_channels=capacity*2, kernel_size=4, stride=2, padding=1) # out: c x 7 x 7
-        self.fc_mu = nn.Linear(in_features=capacity*2*7*7, out_features=latent_dims)
-        self.fc_logvar = nn.Linear(in_features=capacity*2*7*7, out_features=latent_dims)
 
-    def forward(self, images):
+        model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
 
+        # get the number of input features for the classifier
+        in_features = model.roi_heads.box_predictor.cls_score.in_features
+        # replace the pre-trained head with a new one
+        model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
+
+        # now get the number of input features for the mask classifier
+        in_features_mask = model.roi_heads.mask_predictor.conv5_mask.in_channels
+        hidden_layer = 256
+        # and replace the mask predictor with a new one
+        model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask,
+                                                        hidden_layer,
+                                                        num_classes)
+        self.model = model
+        
+
+    def forward(self, x1, x2=None):
+        if x2!=None:
+            out = self.model(x1, x2)
+        else:
+            out = self.model(x1)
+        return out
 
 class Concater(nn.Module):
     '''
@@ -36,7 +56,8 @@ class Concater(nn.Module):
     def __init__(self):
         super(Concater, self).__init__()
 
-    self.Depth = DepthEstimation()
-    self.ObjectDetector = ObjectDetector()
+        self.Depth = DepthEstimation()
+        self.ObjectDetector = ObjectDetector()
 
     def forward(self, images):
+        pass

@@ -214,7 +214,9 @@ It is noteworthy to mention that Matlab isn't open source and you should buy thi
 \newpage
 
 \section{Datas}
+	\vspace{0.3cm}
 \subsection{Converting Datas}
+	\vspace{0.3cm}
 We converted the datas which were in the .mat format to the .png  for better RAM management. This way it is possible to load the images directly from the hard drive in each itteration.
 
 \subsection{Loading Datas}
@@ -262,13 +264,33 @@ Figure \ref{fig:sample_datas} shows a sample from the dataset.
     \includegraphics[width=\linewidth]{images/labelNo8.png}
     \caption{Label No 3}
   \end{subfigure}
-  \caption{Loss, Accuracy and Confusion Matrix for 1 Directional LSTM}
+  \caption{Some Sample Images from The Dataset}
   \label{fig:sample_datas}
 \end{figure}
 
 As can be seen in Figure \ref{fig:sample_datas}, dataset contains image, label, and depth.
 
+\newpage
 
+\subsection{Data Augmentation}
+	\vspace{0.3cm}
+We augmented the datas by resizing to 640, random cropping an 640$\times$640 square, and random horizontal flip. Some of the Augmented Images are plotted in Figure \ref{fig:augment}.
+
+
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/imgNo1272.png}
+    \caption{Image}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/aug_image.png}
+    \caption{Augmented Image}
+  \end{subfigure}
+  \caption{An Image and its Augmented Version}
+  \label{fig:augment}
+\end{figure}
 
 
 
