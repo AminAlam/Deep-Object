@@ -1,9 +1,12 @@
 import math
 import sys
 import time
+import numpy as np
 
 import torch
+import torchvision
 import torchvision.models.detection.mask_rcnn
+
 import utils
 from coco_eval import CocoEvaluator
 from coco_utils import get_coco_api_from_dataset
@@ -63,7 +66,7 @@ def train_one_epoch_OD(model, optimizer, data_loader, device, epoch, print_freq,
     return metric_logger
 
 
-def train_one_epoch_DD(model, optimizer, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
+def train_one_epoch_DD(model, optimizer, criterion, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
     model.train()
     resizer = torchvision.transforms.Resize([384, 512])
     for indx, (images, depths, targets) in enumerate(data_loader):
@@ -90,14 +93,8 @@ def train_one_epoch_DD(model, optimizer, data_loader, device, epoch, print_freq,
             loss.backward()
             optimizer.step()
 
-            prediction = prediction/torch.max(prediction)
-            prediction = prediction.cpu().detach().numpy()
-            plt.imshow(1-prediction)
-            plt.show()
-            plt.show()
-
         if np.mod(indx, print_freq)==0:
-            stat = "Epoch = {0} | Itter =  {1}/{2} | Loss = {3}\n".format(epoch, indx, len(data_loader), loss.item)
+            stat = "Epoch = {0} | Itter =  {1}/{2} | Loss = {3}".format(epoch, indx, len(data_loader), loss.item())
             print(stat)
 
 def _get_iou_types(model):
