@@ -72,9 +72,9 @@ class ODD_Dataset(Dataset):
 
 
         if self.transforms is not None:
-            images, target = self.transforms(images, target)
+            images, depths, target = self.transforms(images, depths, target)
 
-        return images, target
+        return images, depths, target
 
 
 

@@ -285,7 +285,7 @@ def init_distributed_mode(args):
     torch.distributed.barrier()
     setup_for_distributed(args.rank == 0)
 
-    
+
 def mat2png(path2dataset):
     images_and_labels = mat73.loadmat(path2dataset)
 

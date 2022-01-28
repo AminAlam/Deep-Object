@@ -28,7 +28,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, lo
             optimizer, start_factor=warmup_factor, total_iters=warmup_iters
         )
 
-    for images, targets in metric_logger.log_every(data_loader, print_freq, header):
+    for images, depths, targets in metric_logger.log_every(data_loader, print_freq, header):
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
         with torch.cuda.amp.autocast(enabled=scaler is not None):
@@ -93,7 +93,7 @@ def evaluate(model, data_loader, device):
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
 
-    for images, targets in metric_logger.log_every(data_loader, 100, header):
+    for images, depths, targets in metric_logger.log_every(data_loader, 100, header):
         images = list(img.to(device) for img in images)
 
         if torch.cuda.is_available():
