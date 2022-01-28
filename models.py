@@ -11,11 +11,13 @@ class DepthEstimation(nn.Module):
     Class performs Depth Estimation.
     '''
 
-    def __init__(self):
+    def __init__(self, model_type):
         super(DepthEstimation, self).__init__()
+        self.model = torch.hub.load("intel-isl/MiDaS", model_type)
 
-    def forward(self, images):
-        pass
+    def forward(self, x):
+        out = self.model(x)
+        return out
 
 class ObjectDetector(nn.Module):
     '''

@@ -1,19 +1,18 @@
 import math
 import sys
 import time
+import numpy as np
 
 import torch
+import torchvision
 import torchvision.models.detection.mask_rcnn
+
 import utils
 from coco_eval import CocoEvaluator
 from coco_utils import get_coco_api_from_dataset
 
 
-def write_log(file_path, stat):
-  with open(file_path, 'a') as f:
-    f.write("{0}\n".format(stat))
-
-def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
+def train_one_epoch_OD(model, optimizer, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
     model.train()
     metric_logger = utils.MetricLogger(delimiter="  ")
     metric_logger.add_meter("lr", utils.SmoothedValue(window_size=1, fmt="{value:.6f}"))
@@ -28,7 +27,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, lo
             optimizer, start_factor=warmup_factor, total_iters=warmup_iters
         )
 
-    for images, targets in metric_logger.log_every(data_loader, print_freq, header):
+    for images, depths, targets in metric_logger.log_every(data_loader, print_freq, header):
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
         with torch.cuda.amp.autocast(enabled=scaler is not None):
@@ -42,7 +41,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, lo
         loss_value = losses_reduced.item()
 
         if logs_path != None:
-            write_log(logs_path, loss_value)
+            utils.write_log(logs_path, loss_value)
 
         if not math.isfinite(loss_value):
             print(f"Loss is {loss_value}, stopping training")
@@ -66,6 +65,37 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq, lo
 
     return metric_logger
 
+
+def train_one_epoch_DD(model, optimizer, criterion, data_loader, device, epoch, print_freq, logs_path=None, scaler=None):
+    model.train()
+    resizer = torchvision.transforms.Resize([384, 512])
+    for indx, (images, depths, targets) in enumerate(data_loader):
+        for j in range(len(images)):
+            depth = depths[j][1,:,:].to(device)
+            img = images[j].to(device)
+
+            input_batch = resizer(img)
+            input_batch = torch.unsqueeze(input_batch, 0)
+
+            prediction = model(input_batch)
+            prediction = torch.nn.functional.interpolate(
+                prediction.unsqueeze(1),
+                size=img.shape[1:],
+                mode="bicubic",
+                align_corners=False,
+            ).squeeze()
+
+            loss = criterion(1-prediction/torch.max(prediction), depth/torch.max(depth))
+            if logs_path != None:
+                utils.write_log(logs_path, loss.item())
+
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+
+        if np.mod(indx, print_freq)==0:
+            stat = "Epoch = {0} | Itter =  {1}/{2} | Loss = {3}".format(epoch, indx, len(data_loader), loss.item())
+            print(stat)
 
 def _get_iou_types(model):
     model_without_ddp = model
@@ -93,7 +123,7 @@ def evaluate(model, data_loader, device):
     iou_types = _get_iou_types(model)
     coco_evaluator = CocoEvaluator(coco, iou_types)
 
-    for images, targets in metric_logger.log_every(data_loader, 100, header):
+    for images, depths, targets in metric_logger.log_every(data_loader, 100, header):
         images = list(img.to(device) for img in images)
 
         if torch.cuda.is_available():

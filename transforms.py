@@ -21,18 +21,19 @@ class Compose:
     def __init__(self, transforms):
         self.transforms = transforms
 
-    def __call__(self, image, target):
+    def __call__(self, image, depths, target):
         for t in self.transforms:
-            image, target = t(image, target)
-        return image, target
+            image, depths, target = t(image, depths, target)
+        return image, depths, target
 
 
 class RandomHorizontalFlip(T.RandomHorizontalFlip):
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         if torch.rand(1) < self.p:
             image = F.hflip(image)
+            depths = F.hflip(depths)
             if target is not None:
                 width, _ = F.get_image_size(image)
                 target["boxes"][:, [0, 2]] = width - target["boxes"][:, [2, 0]]
@@ -42,24 +43,28 @@ class RandomHorizontalFlip(T.RandomHorizontalFlip):
                     keypoints = target["keypoints"]
                     keypoints = _flip_coco_person_keypoints(keypoints, width)
                     target["keypoints"] = keypoints
-        return image, target
+        return image, depths, target
 
 
 class ToTensor(nn.Module):
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         image = F.pil_to_tensor(image)
         image = F.convert_image_dtype(image)
-        return image, target
+        
+        depths = F.pil_to_tensor(depths)
+        depths = F.convert_image_dtype(depths)
+        return image, depths, target
 
 
 class PILToTensor(nn.Module):
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         image = F.pil_to_tensor(image)
-        return image, target
+        depths = F.pil_to_tensor(depths)
+        return image, depths, target
 
 
 class ConvertImageDtype(nn.Module):
@@ -68,10 +73,11 @@ class ConvertImageDtype(nn.Module):
         self.dtype = dtype
 
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         image = F.convert_image_dtype(image, self.dtype)
-        return image, target
+        depths = F.convert_image_dtype(depths, self.dtype)
+        return image, depths, target
 
 
 class RandomIoUCrop(nn.Module):
@@ -96,7 +102,7 @@ class RandomIoUCrop(nn.Module):
         self.trials = trials
 
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         if target is None:
             raise ValueError("The targets can't be None for this transform.")
@@ -107,6 +113,12 @@ class RandomIoUCrop(nn.Module):
             elif image.ndimension() == 2:
                 image = image.unsqueeze(0)
 
+        if isinstance(depths, torch.Tensor):
+            if depths.ndimension() not in {2, 3}:
+                raise ValueError(f"depths should be 2/3 dimensional. Got {depths.ndimension()} dimensions.")
+            elif depths.ndimension() == 2:
+                depths = depths.unsqueeze(0)
+
         orig_w, orig_h = F.get_image_size(image)
 
         while True:
@@ -114,7 +126,7 @@ class RandomIoUCrop(nn.Module):
             idx = int(torch.randint(low=0, high=len(self.options), size=(1,)))
             min_jaccard_overlap = self.options[idx]
             if min_jaccard_overlap >= 1.0:  # a value larger than 1 encodes the leave as-is option
-                return image, target
+                return image, depths, target
 
             for _ in range(self.trials):
                 # check the aspect ratio limitations
@@ -157,8 +169,9 @@ class RandomIoUCrop(nn.Module):
                 target["boxes"][:, 0::2].clamp_(min=0, max=new_w)
                 target["boxes"][:, 1::2].clamp_(min=0, max=new_h)
                 image = F.crop(image, top, left, new_h, new_w)
+                depths = F.crop(depths, top, left, new_h, new_w)
 
-                return image, target
+                return image, depths, target
 
 
 class RandomZoomOut(nn.Module):
@@ -181,7 +194,7 @@ class RandomZoomOut(nn.Module):
         return tuple(int(x) for x in self.fill) if is_pil else 0
 
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depth: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         if isinstance(image, torch.Tensor):
             if image.ndimension() not in {2, 3}:
@@ -189,8 +202,14 @@ class RandomZoomOut(nn.Module):
             elif image.ndimension() == 2:
                 image = image.unsqueeze(0)
 
+        if isinstance(depth, torch.Tensor):
+            if depth.ndimension() not in {2, 3}:
+                raise ValueError(f"depths should be 2/3 dimensional. Got {depth.ndimension()} dimensions.")
+            elif depth.ndimension() == 2:
+                depth = depth.unsqueeze(0)
+
         if torch.rand(1) >= self.p:
-            return image, target
+            return image, depth, target
 
         orig_w, orig_h = F.get_image_size(image)
 
@@ -210,6 +229,8 @@ class RandomZoomOut(nn.Module):
             fill = self._get_fill_value(F._is_pil_image(image))
 
         image = F.pad(image, [left, top, right, bottom], fill=fill)
+        depth = F.pad(depth, [left, top, right, bottom], fill=fill)
+
         if isinstance(image, torch.Tensor):
             # PyTorch's pad supports only integers on fill. So we need to overwrite the colour
             v = torch.tensor(self.fill, device=image.device, dtype=image.dtype).view(-1, 1, 1)
@@ -217,11 +238,15 @@ class RandomZoomOut(nn.Module):
                 ..., :, (left + orig_w) :
             ] = v
 
+            depth[..., :top, :] = depth[..., :, :left] = depth[..., (top + orig_h) :, :] = depth[
+                ..., :, (left + orig_w) :
+            ] = v
+
         if target is not None:
             target["boxes"][:, 0::2] += left
             target["boxes"][:, 1::2] += top
 
-        return image, target
+        return image, depth, target
 
 
 class RandomPhotometricDistort(nn.Module):
@@ -241,7 +266,7 @@ class RandomPhotometricDistort(nn.Module):
         self.p = p
 
     def forward(
-        self, image: Tensor, target: Optional[Dict[str, Tensor]] = None
+        self, image: Tensor, depths: Tensor, target: Optional[Dict[str, Tensor]] = None
     ) -> Tuple[Tensor, Optional[Dict[str, Tensor]]]:
         if isinstance(image, torch.Tensor):
             if image.ndimension() not in {2, 3}:
@@ -249,25 +274,36 @@ class RandomPhotometricDistort(nn.Module):
             elif image.ndimension() == 2:
                 image = image.unsqueeze(0)
 
+        if isinstance(depths, torch.Tensor):
+            if depths.ndimension() not in {2, 3}:
+                raise ValueError(f"depths should be 2/3 dimensional. Got {depths.ndimension()} dimensions.")
+            elif depths.ndimension() == 2:
+                depths = depths.unsqueeze(0)
+
         r = torch.rand(7)
 
         if r[0] < self.p:
             image = self._brightness(image)
+            depths = self._brightness(depths)
 
         contrast_before = r[1] < 0.5
         if contrast_before:
             if r[2] < self.p:
                 image = self._contrast(image)
+                depths = self._contrast(depths)
 
         if r[3] < self.p:
             image = self._saturation(image)
+            depths = self._saturation(depths)
 
         if r[4] < self.p:
             image = self._hue(image)
+            depths = self._hue(depths)
 
         if not contrast_before:
             if r[5] < self.p:
                 image = self._contrast(image)
+                depths = self._contrast(depths)
 
         if r[6] < self.p:
             channels = F.get_image_num_channels(image)
@@ -277,8 +313,12 @@ class RandomPhotometricDistort(nn.Module):
             if is_pil:
                 image = F.pil_to_tensor(image)
                 image = F.convert_image_dtype(image)
+                depths = F.pil_to_tensor(depths)
+                depths = F.convert_image_dtype(depths)
             image = image[..., permutation, :, :]
+            depths = depths[..., permutation, :, :]
             if is_pil:
                 image = F.to_pil_image(image)
+                depths = F.to_pil_image(depths)
 
-        return image, target
+        return image, depths, target
