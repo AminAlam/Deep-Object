@@ -293,3 +293,17 @@ def mat2png(path2dataset):
         plt.imsave('Datas/imgNo{0}.png'.format(i), images_and_labels['images'][:,:,:,i])
         plt.imsave('Datas/depthNo{0}.png'.format(i), images_and_labels['depths'][:,:,i])
         plt.imsave('Datas/labelNo{0}.png'.format(i), images_and_labels['labels'][:,:,i])
+
+
+def load_checkpoint(checkpoint, model, optimizer):
+    print("=> Loading checkpoint")
+    model.load_state_dict(checkpoint["state_dict"])
+    optimizer.load_state_dict(checkpoint["optimizer"])
+
+def save_checkpoint(state, filename):
+    print("=> Saving checkpoint")
+    torch.save(state, filename)
+
+def write_log(file_path, stat):
+  with open(file_path, 'a') as f:
+    f.write("{0}\n".format(stat))
