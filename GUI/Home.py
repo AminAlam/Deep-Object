@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Home.ui'
+# Form implementation generated from reading ui file 'GUI/Home.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.6
 #
@@ -101,13 +101,13 @@ class Ui_HomeWindow(object):
 "")
         self.widget.setObjectName("widget")
         self.load_image = QtWidgets.QPushButton(self.widget)
-        self.load_image.setGeometry(QtCore.QRect(70, 50, 113, 32))
+        self.load_image.setGeometry(QtCore.QRect(80, 60, 113, 32))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.load_image.setFont(font)
         self.load_image.setObjectName("load_image")
         self.loaded_image_widget = QtWidgets.QWidget(self.widget)
-        self.loaded_image_widget.setGeometry(QtCore.QRect(550, 30, 511, 381))
+        self.loaded_image_widget.setGeometry(QtCore.QRect(30, 140, 1031, 561))
         self.loaded_image_widget.setStyleSheet("QWidget\n"
 "{\n"
 "    background-color: white;\n"
@@ -117,7 +117,7 @@ class Ui_HomeWindow(object):
 "")
         self.loaded_image_widget.setObjectName("loaded_image_widget")
         self.image_slider = QtWidgets.QSlider(self.widget)
-        self.image_slider.setGeometry(QtCore.QRect(540, 440, 511, 22))
+        self.image_slider.setGeometry(QtCore.QRect(320, 760, 511, 22))
         self.image_slider.setAcceptDrops(False)
         self.image_slider.setAutoFillBackground(False)
         self.image_slider.setMaximum(10)
@@ -127,7 +127,7 @@ class Ui_HomeWindow(object):
         self.image_slider.setTickInterval(0)
         self.image_slider.setObjectName("image_slider")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setGeometry(QtCore.QRect(780, 420, 131, 16))
+        self.label.setGeometry(QtCore.QRect(530, 730, 131, 16))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.label.setFont(font)
