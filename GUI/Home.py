@@ -101,7 +101,7 @@ class Ui_HomeWindow(object):
 "")
         self.widget.setObjectName("widget")
         self.load_image = QtWidgets.QPushButton(self.widget)
-        self.load_image.setGeometry(QtCore.QRect(70, 50, 113, 32))
+        self.load_image.setGeometry(QtCore.QRect(80, 60, 113, 32))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.load_image.setFont(font)

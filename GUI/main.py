@@ -16,6 +16,8 @@ from PIL import Image
 matplotlib.use("TkAgg")
 from Home import *
 
+plt.rcParams["figure.figsize"] = [7.50, 3.50]
+plt.rcParams["figure.autolayout"] = True
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -90,6 +92,9 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
             self.objects_list.append(plot_img.permute(1,2,0).cpu().numpy())
 
     def plot_images(self):
+        self.ax1.axis('off')
+        self.ax2.axis('off')
+        self.ax3.axis('off')
         self.ax1.clear()
         self.ax2.clear()
         self.ax3.clear()
