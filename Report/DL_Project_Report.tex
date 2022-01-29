@@ -116,7 +116,7 @@
 	\parbox[b]{0.75\textwidth}{ % Paragraph box for holding the title page text, adjust the width to move the title page left or right on the page
 		
 		{\Huge\bfseries DL Course Project}\\[2\baselineskip] % Title
-		{\large\textit{joint Depth Estimation and Object Detection}}\\[4\baselineskip] % Subtitle or further description
+		{\large\textit{Joint Depth Estimation and Object Detection}}\\[4\baselineskip] % Subtitle or further description
 		{\Large\textsc{Mohammad Amin Alamalhoda}} \\ % Author name, lower case for consistent small caps
 		{\Large\textsc{AmirReza HatamiPour}}\\
 		{\Large\textsc{MohammadReza Alimohammadi}}
@@ -204,11 +204,19 @@ You can download source code of git and make\-install it using \href{https://git
 This project needs the following stuff in order to be compiled successfully.
 
 \begin{itemize}
-\item -
+\item PyTorch - Python Lib
+\item Torchvision - Python Lib
+\item OpenCV - Python Lib
+\item Matplotlib - Python Lib
+\item mat73 - Python Lib
+\item Os - Python Lib
+\item Sys - Python Lib
+\item \href{https://pytorch.org/vision/stable/_modules/torchvision/models/detection/mask_rcnn.html}{Mask-RCNN}- Torch Hub Model
+\item \href{https://pytorch.org/hub/intelisl_midas_v2/}{MiDaS} - Torch Hub Model
+
 
 \end{itemize}
 
-It is noteworthy to mention that Matlab isn't open source and you should buy this product for using this, but you can ask your academic institute or university to provide you a license. You can also use \href{https://www.gnu.org/software/octave/index}{GNU Octave} which is an open\-source scientific programming language and supports all the Matlab modules and scripts.
 
 
 \newpage
@@ -383,7 +391,7 @@ Mask R-CNN, extends Faster R-CNN by adding a branch for predicting segmentation 
 \begin{figure}[ht]
   \centering
     \includegraphics[width=0.7\linewidth]{images/mask_rcnn.png}
-      \caption{Box }
+      \caption{Bounding Box Regression in the Mask-RCNN}
   \label{fig:mask-rcnn}
 \end{figure}
 
@@ -408,9 +416,27 @@ The classification loss $L_{cs}$ and bounding-box $L_{bo}$. The mask branch has 
 
 $L_{mask}$ allows the network to generate masks for every class without competition among classes; They relied on the dedicated classification branch to predict the class label used to select the output mask. This decouples mask and class prediction. This is different from common practice when applying FCNs to semantic segmentation, which typically uses a per-pixel softmax and a multinomial cross-entropy loss. In that case, masks across classes compete; they do not have a per-pixel sigmoid and a binary loss.
 
+You can see an overview of \textit{Mask-RCNN} in the Figure \ref{fig:mask-rcnn-2}
 
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=0.7\linewidth]{images/mask-rcnn-2.png}
+      \caption{A Schematic of the Mask-RCNN}
+  \label{fig:mask-rcnn-2}
+\end{figure}
 
+\newpage
+\subsubsection{Fine-Tuning}
+	\vspace{0.3cm}
 
+As mentioned earlier, we fine tuned the model by using our datas. You can see the training loss plot in Figure \ref{fig:loss_OD}.
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/loss_OD.png}
+      \caption{Training Loss of the Object Detector Model}
+  \label{fig:loss_OD}
+\end{figure}
 
 
 
