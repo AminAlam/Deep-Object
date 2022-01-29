@@ -116,7 +116,7 @@
 	\parbox[b]{0.75\textwidth}{ % Paragraph box for holding the title page text, adjust the width to move the title page left or right on the page
 		
 		{\Huge\bfseries DL Course Project}\\[2\baselineskip] % Title
-		{\large\textit{Simultaneous Depth and Object Detection}}\\[4\baselineskip] % Subtitle or further description
+		{\large\textit{joint Depth Estimation and Object Detection}}\\[4\baselineskip] % Subtitle or further description
 		{\Large\textsc{Mohammad Amin Alamalhoda}} \\ % Author name, lower case for consistent small caps
 		{\Large\textsc{AmirReza HatamiPour}}\\
 		{\Large\textsc{MohammadReza Alimohammadi}}
@@ -213,11 +213,60 @@ It is noteworthy to mention that Matlab isn't open source and you should buy thi
 
 \newpage
 
+\section{Project Structure}
+	\vspace{0.3cm}
+	
+This project contains different files. We will explain them in the following.
+\subsection{train.ipynb}
+	\vspace{0.3cm}
+	
+This jupyter notebook file contains the configs and essential properties for training the networks.
+
+\subsection{coco\_eval.py and coco\_utils.py}
+	\vspace{0.3cm}
+This files contain coco tools for image cropping and preparing images for object detection.
+
+\subsection{datas.py}
+	\vspace{0.3cm}
+This files contains dataloader classes and handles the loading and augmentation of the datas during training.
+
+\subsection{engine.py}
+	\vspace{0.3cm}
+	
+This file contains the functions for training and evaluation of the networks.
+
+\subsection{models.py}
+	\vspace{0.3cm}	
+	
+All the model classes (Object Detector, Depth Estimator, and Concatener) are defined in this file.
+	
+\subsection{transforms.py}
+	\vspace{0.3cm}	
+	
+Torchvision transfomation for augmenting the data set are defined in this file.
+	
+\subsection{utils.py}
+	\vspace{0.3cm}	
+	
+This file contain some useful function such as model saver-loader, loggers, and ... .
+
+\subsection{GUI Directory}
+	\vspace{0.3cm}	
+
+This directory contains files related to our application for loading and joint object detection and depth estimation of the datas.
+
+
+
+
+
+
+	\newpage
+	
 \section{Datas}
 	\vspace{0.3cm}
 \subsection{Converting Datas}
 	\vspace{0.3cm}
-We converted the datas which were in the .mat format to the .png  for better RAM management. This way it is possible to load the images directly from the hard drive in each itteration.
+We converted the datas which were in the .mat format to the .png  for better RAM management. This way it is possible to load the images directly from the hard drive in each iteration.
 
 \subsection{Loading Datas}
 Figure \ref{fig:sample_datas} shows a sample from the dataset.
@@ -264,6 +313,18 @@ Figure \ref{fig:sample_datas} shows a sample from the dataset.
     \includegraphics[width=\linewidth]{images/labelNo8.png}
     \caption{Label No 3}
   \end{subfigure}
+   \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/imgNo10.png}
+    \caption{Image No 4}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/depthNo10.png}
+    \caption{Depth No 4}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/labelNo10.png}
+    \caption{Label No 4}
+  \end{subfigure}
   \caption{Some Sample Images from The Dataset}
   \label{fig:sample_datas}
 \end{figure}
@@ -291,6 +352,67 @@ We augmented the datas by resizing to 640, random cropping an 640$\times$640 squ
   \caption{An Image and its Augmented Version}
   \label{fig:augment}
 \end{figure}
+
+Transforms are done using \textit{torchvisoin.datas.trasnforms}.
+\subsection{Data Loader}
+	\vspace{0.3cm}
+We used \textit{torch data loaders} for managing datas and augmentation. You can find this files in datas.py file.
+
+\subsection{Loading .mat Dataset}
+	\vspace{0.3cm}
+
+Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \text{mat2png()} which can be find in utils.py
+
+
+\newpage
+
+	
+\section{Models}
+	\vspace{0.3cm}
+\subsection{Object Detection}
+	\vspace{0.3cm}
+
+We used pretrained \textit{Mask-RCNN} as the object detector network and fine tuned it using our dataset. You can find the paper of \textit{Mask-RCNN} using \href{https://arxiv.org/pdf/1703.06870.pdf}{this link}.
+
+\subsubsection{Architecture}
+
+This network develops, for instance segmentation. Instance segmentation is challenging because it requires the correct detection of all objects in an image while precisely segmenting each instance. It therefore combines elements from the classical computer vision tasks of object detection, where the goal is to classify individual objects and localize each using a bounding box, and semantic segmentation, where the goal is to classify each pixel into a fixed set of categories without differentiating object instances.
+Mask R-CNN, extends Faster R-CNN by adding a branch for predicting segmentation masks on each Region of Interest (RoI), in parallel with the existing branch for classification and bounding box regression. You can see an example of box regression in the Figure \ref{fig:mask-rcnn}.
+
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=0.7\linewidth]{images/mask_rcnn.png}
+      \caption{Box }
+  \label{fig:mask-rcnn}
+\end{figure}
+
+The mask branch is a small FCN applied to each RoI, predicting a segmentation mask in a pixel-to-pixel manner. Mask R-CNN is simple to implement and train given the Faster R-CNN framework, which facilitates a wide range of flexible architecture designs. Additionally, the mask branch only adds a small computational overhead, enabling a fast system and rapid experimentation. Faster RCNN was not designed for pixel-to-pixel alignment between network inputs and output. 
+To fix the misalignment, proposed a simple, quantization-free layer, called RoIAlign, that faithfully preserves exact spatial locations. Despite being a seemingly minor change, RoIAlign has a large impact: it improves mask accuracy by relative 10\% to 50\%, showing bigger gains under stricter localization metrics. Second, we found it essential to decouple mask and class prediction: we predict a binary mask for each class independently, without competition among classes, and rely on the network’s RoI classification branch to predict the category. 
+
+\subsubsection{Concept}
+	\vspace{0.3cm}
+Mask R-CNN is conceptually simple: Faster R-CNN has two outputs for each candidate object, a class label, and a bounding-box offset; to this, we add a third branch that outputs the object mask. Mask R-CNN is thus a natural and intuitive idea. But the additional mask output is distinct from the class and box outputs, requiring extraction of an object's much finer spatial layout. Next, we introduce the key elements of Mask R-CNN, including pixel-to-pixel alignment, which is the main missing piece of Fast/Faster R-CNN.
+\newpage
+
+\subsubsection{Computation Pricedure}
+	\vspace{0.3cm}
+	
+Mask R-CNN adopts the same two-stage procedure, with an identical first stage (RPN). In parallel to predicting the class and box offset in the second stage, Mask R-CNN also outputs a binary mask for each RoI. This contrasts with most recent systems, where classification depends on mask predictions. Our approach follows the spirit of Fast R-CNN that applies bounding-box classification and regression in parallel (which turned out to largely simplify the multi-stage pipeline of original R-CNN). Formally, during training, we define a multi-task loss on each sampled RoI as:
+
+\begin{eqnarray*}
+L &= L_{cs} +L_{box}+L_{mask}
+\end{eqnarray*}
+
+The classification loss $L_{cs}$ and bounding-box $L_{bo}$. The mask branch has a $Km^2$-dimensional output for each RoI, which encodes K binary masks of resolution m × m, one for each of the $K$ classes. To this, apply a per-pixel sigmoid and define $L_{mask}$ as the average binary cross-entropy loss, for an RoI associated with ground-truth class $k$, $L_{mask}$ is only defined on the $k^{th}$ mask (other mask outputs do not contribute to the loss).
+
+$L_{mask}$ allows the network to generate masks for every class without competition among classes; They relied on the dedicated classification branch to predict the class label used to select the output mask. This decouples mask and class prediction. This is different from common practice when applying FCNs to semantic segmentation, which typically uses a per-pixel softmax and a multinomial cross-entropy loss. In that case, masks across classes compete; they do not have a per-pixel sigmoid and a binary loss.
+
+
+
+
+
+
 
 
 
