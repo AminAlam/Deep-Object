@@ -70,7 +70,7 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
         self.ax4 = self.figure_detected_images.add_subplot(111)
         self.canvas1 = FigureCanvas(self.figure_images)
         self.canvas2 = FigureCanvas(self.figure_detected_images)
-        # self.toolbar = NavigationToolbar(self.canvas, self)
+        
 
         self.ax1.tick_params(left = False, right = False , labelleft = False ,
         labelbottom = False, bottom = False)
@@ -81,12 +81,10 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
         self.ax4.tick_params(left = False, right = False , labelleft = False ,
         labelbottom = False, bottom = False)
 
-        self.lay1 = QtWidgets.QVBoxLayout(self.loaded_image_widget)        
-        # self.lay.addWidget(self.toolbar)
+        self.lay1 = QtWidgets.QVBoxLayout(self.loaded_image_widget)
         self.lay1.addWidget(self.canvas1)
 
-        self.lay2 = QtWidgets.QVBoxLayout(self.detected_image_widget)        
-        self.lay.addWidget(self.toolbar)
+        self.lay2 = QtWidgets.QVBoxLayout(self.detected_image_widget)  
         self.lay2.addWidget(self.canvas2)
 
 
