@@ -1,8 +1,8 @@
 *.pyc
 .DS_Store
-*.png
-*.jpg
-*.jpeg
+# *.png
+# *.jpg
+# *.jpeg
 *.synctex.gz
 *.gz
 *.tar
