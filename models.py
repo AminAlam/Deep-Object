@@ -28,15 +28,11 @@ class ObjectDetector(nn.Module):
 
         model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
 
-        # get the number of input features for the classifier
         in_features = model.roi_heads.box_predictor.cls_score.in_features
-        # replace the pre-trained head with a new one
         model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
 
-        # now get the number of input features for the mask classifier
         in_features_mask = model.roi_heads.mask_predictor.conv5_mask.in_channels
         hidden_layer = 256
-        # and replace the mask predictor with a new one
         model.roi_heads.mask_predictor = MaskRCNNPredictor(in_features_mask,
                                                         hidden_layer,
                                                         num_classes)
@@ -55,11 +51,46 @@ class Concater(nn.Module):
     Class concats DepthEstimation and ObjectDetector
     '''
 
-    def __init__(self):
+    def __init__(self, object_detector, depth_estimator):
         super(Concater, self).__init__()
 
-        self.Depth = DepthEstimation()
-        self.ObjectDetector = ObjectDetector()
+        self.depth_estimator = depth_estimator
+        self.object_detector = object_detector
+        self.resizer = torchvision.transforms.Resize([384, 512])
+        self.object_detector.eval()
+        self.depth_estimator.eval()
 
-    def forward(self, images):
-        pass
+
+    def out(self, img):
+        with torch.no_grad():
+            prediction_OD = self.object_detector([img])
+            
+            input_batch = self.resizer(img)
+            input_batch = torch.unsqueeze(input_batch, 0)
+            prediction_DD = self.depth_estimator(input_batch)
+
+            prediction_DD = torch.nn.functional.interpolate(
+                prediction_DD.unsqueeze(1),
+                size=img.shape[1:],
+                mode="bicubic",
+                align_corners=False,
+            ).squeeze()
+        
+        img = torch.as_tensor(img*255, dtype=torch.uint8)
+        depth_percentage = []
+        for i in range(10):
+            center_x = int((prediction_OD[0]['boxes'][i,0]+prediction_OD[0]['boxes'][i,2])/2)
+            center_y = int((prediction_OD[0]['boxes'][i,1]+prediction_OD[0]['boxes'][i,3])/2)
+            depth_value = prediction_DD[center_y, center_x].numpy()
+            if depth_value > 1.5*torch.mean(prediction_DD).numpy():
+                label = 'Close'
+            elif depth_value < 0.5*torch.mean(prediction_DD).numpy():
+                label = 'Far'
+            else:
+                label = 'Middle'
+            depth_percentage.append('{0:.2f} - {1}'.format(depth_value,label))
+        plot_img = torchvision.utils.draw_bounding_boxes(img, prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=14)
+        return plot_img.permute(1,2,0).cpu().numpy()
+
+
+
