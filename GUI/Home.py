@@ -14,16 +14,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_HomeWindow(object):
     def setupUi(self, HomeWindow):
         HomeWindow.setObjectName("HomeWindow")
-        HomeWindow.resize(1089, 788)
+        HomeWindow.resize(1089, 852)
         HomeWindow.setStyleSheet("")
         self.widget = QtWidgets.QWidget(HomeWindow)
-        self.widget.setGeometry(QtCore.QRect(0, -50, 1091, 801))
+        self.widget.setGeometry(QtCore.QRect(0, -50, 1091, 901))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.widget.setFont(font)
         self.widget.setStyleSheet("color:black;\n"
 "\n"
-"\n"
+"background-color: white;\n"
 "\n"
 "QDoubleSpinBox\n"
 "{\n"
@@ -101,13 +101,13 @@ class Ui_HomeWindow(object):
 "")
         self.widget.setObjectName("widget")
         self.load_image = QtWidgets.QPushButton(self.widget)
-        self.load_image.setGeometry(QtCore.QRect(80, 60, 113, 32))
+        self.load_image.setGeometry(QtCore.QRect(10, 830, 113, 32))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.load_image.setFont(font)
         self.load_image.setObjectName("load_image")
         self.loaded_image_widget = QtWidgets.QWidget(self.widget)
-        self.loaded_image_widget.setGeometry(QtCore.QRect(30, 140, 1031, 561))
+        self.loaded_image_widget.setGeometry(QtCore.QRect(30, 60, 1031, 271))
         self.loaded_image_widget.setStyleSheet("QWidget\n"
 "{\n"
 "    background-color: white;\n"
@@ -117,7 +117,7 @@ class Ui_HomeWindow(object):
 "")
         self.loaded_image_widget.setObjectName("loaded_image_widget")
         self.image_slider = QtWidgets.QSlider(self.widget)
-        self.image_slider.setGeometry(QtCore.QRect(320, 760, 511, 22))
+        self.image_slider.setGeometry(QtCore.QRect(270, 840, 781, 31))
         self.image_slider.setAcceptDrops(False)
         self.image_slider.setAutoFillBackground(False)
         self.image_slider.setMaximum(10)
@@ -126,8 +126,18 @@ class Ui_HomeWindow(object):
         self.image_slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
         self.image_slider.setTickInterval(0)
         self.image_slider.setObjectName("image_slider")
+        self.detected_image_widget = QtWidgets.QWidget(self.widget)
+        self.detected_image_widget.setGeometry(QtCore.QRect(160, 320, 831, 471))
+        self.detected_image_widget.setStyleSheet("QWidget\n"
+"{\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.detected_image_widget.setObjectName("detected_image_widget")
         self.label = QtWidgets.QLabel(self.widget)
-        self.label.setGeometry(QtCore.QRect(530, 730, 131, 16))
+        self.label.setGeometry(QtCore.QRect(610, 810, 91, 16))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.label.setFont(font)
