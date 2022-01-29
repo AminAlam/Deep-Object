@@ -1,3 +1,5 @@
 \contentsline {figure}{\numberline {1}{\ignorespaces Some Sample Images from The Dataset\relax }}{3}{figure.caption.4}%
 \contentsline {figure}{\numberline {2}{\ignorespaces An Image and its Augmented Version\relax }}{4}{figure.caption.5}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Box \relax }}{5}{figure.caption.6}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Bounding Box Regression in the Mask-RCNN\relax }}{5}{figure.caption.6}%
+\contentsline {figure}{\numberline {4}{\ignorespaces A Schematic of the Mask-RCNN\relax }}{6}{figure.caption.7}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Training Loss of the Object Detector Model\relax }}{7}{figure.caption.8}%

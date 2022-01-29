@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1089</width>
-    <height>788</height>
+    <height>852</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,7 +22,7 @@
      <x>0</x>
      <y>-50</y>
      <width>1091</width>
-     <height>801</height>
+     <height>901</height>
     </rect>
    </property>
    <property name="font">
@@ -33,7 +33,7 @@
    <property name="styleSheet">
     <string notr="true">color:black;
 
-
+background-color: white;
 
 QDoubleSpinBox
 {
@@ -113,8 +113,8 @@ color: white;
    <widget class="QPushButton" name="load_image">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>60</y>
+      <x>10</x>
+      <y>830</y>
       <width>113</width>
       <height>32</height>
      </rect>
@@ -132,9 +132,9 @@ color: white;
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>140</y>
+      <y>60</y>
       <width>1031</width>
-      <height>561</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -150,10 +150,10 @@ color: white;
    <widget class="QSlider" name="image_slider">
     <property name="geometry">
      <rect>
-      <x>320</x>
-      <y>760</y>
-      <width>511</width>
-      <height>22</height>
+      <x>270</x>
+      <y>840</y>
+      <width>781</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="acceptDrops">
@@ -178,12 +178,31 @@ color: white;
      <number>0</number>
     </property>
    </widget>
+   <widget class="QWidget" name="detected_image_widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>320</y>
+      <width>831</width>
+      <height>471</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget
+{
+    background-color: white;
+}
+
+
+</string>
+    </property>
+   </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>530</x>
-      <y>730</y>
-      <width>131</width>
+      <x>610</x>
+      <y>810</y>
+      <width>91</width>
       <height>16</height>
      </rect>
     </property>

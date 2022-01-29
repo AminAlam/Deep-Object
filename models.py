@@ -11,9 +11,9 @@ class DepthEstimation(nn.Module):
     Class performs Depth Estimation.
     '''
 
-    def __init__(self, model_type):
+    def __init__(self, model_type, pretrained=True):
         super(DepthEstimation, self).__init__()
-        self.model = torch.hub.load("intel-isl/MiDaS", model_type)
+        self.model = torch.hub.load("intel-isl/MiDaS", model_type, pretrained=pretrained)
 
     def forward(self, x):
         out = self.model(x)
@@ -89,7 +89,7 @@ class Concater(nn.Module):
             else:
                 label = 'Middle'
             depth_percentage.append('{0:.2f} - {1}'.format(depth_value,label))
-        plot_img = torchvision.utils.draw_bounding_boxes(img, prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=14)
+        plot_img = torchvision.utils.draw_bounding_boxes(img, prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=24)
         return plot_img.permute(1,2,0).cpu().numpy()
 
 
