@@ -14,10 +14,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_HomeWindow(object):
     def setupUi(self, HomeWindow):
         HomeWindow.setObjectName("HomeWindow")
-        HomeWindow.resize(1089, 852)
+        HomeWindow.resize(1153, 871)
         HomeWindow.setStyleSheet("")
         self.widget = QtWidgets.QWidget(HomeWindow)
-        self.widget.setGeometry(QtCore.QRect(0, -50, 1091, 901))
+        self.widget.setGeometry(QtCore.QRect(0, -30, 1201, 901))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.widget.setFont(font)
@@ -101,21 +101,11 @@ class Ui_HomeWindow(object):
 "")
         self.widget.setObjectName("widget")
         self.load_image = QtWidgets.QPushButton(self.widget)
-        self.load_image.setGeometry(QtCore.QRect(10, 830, 113, 32))
+        self.load_image.setGeometry(QtCore.QRect(50, 830, 113, 32))
         font = QtGui.QFont()
         font.setFamily("Arial")
         self.load_image.setFont(font)
         self.load_image.setObjectName("load_image")
-        self.loaded_image_widget = QtWidgets.QWidget(self.widget)
-        self.loaded_image_widget.setGeometry(QtCore.QRect(30, 60, 1031, 271))
-        self.loaded_image_widget.setStyleSheet("QWidget\n"
-"{\n"
-"    background-color: white;\n"
-"}\n"
-"\n"
-"\n"
-"")
-        self.loaded_image_widget.setObjectName("loaded_image_widget")
         self.image_slider = QtWidgets.QSlider(self.widget)
         self.image_slider.setGeometry(QtCore.QRect(270, 840, 781, 31))
         self.image_slider.setAcceptDrops(False)
@@ -127,7 +117,7 @@ class Ui_HomeWindow(object):
         self.image_slider.setTickInterval(0)
         self.image_slider.setObjectName("image_slider")
         self.detected_image_widget = QtWidgets.QWidget(self.widget)
-        self.detected_image_widget.setGeometry(QtCore.QRect(160, 320, 831, 471))
+        self.detected_image_widget.setGeometry(QtCore.QRect(160, 340, 831, 451))
         self.detected_image_widget.setStyleSheet("QWidget\n"
 "{\n"
 "    background-color: white;\n"
@@ -142,6 +132,40 @@ class Ui_HomeWindow(object):
         font.setFamily("Arial")
         self.label.setFont(font)
         self.label.setObjectName("label")
+        self.loaded_image_widget = QtWidgets.QWidget(self.widget)
+        self.loaded_image_widget.setGeometry(QtCore.QRect(60, 100, 1031, 221))
+        self.loaded_image_widget.setStyleSheet("QWidget\n"
+"{\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"\n"
+"")
+        self.loaded_image_widget.setObjectName("loaded_image_widget")
+        self.label_2 = QtWidgets.QLabel(self.widget)
+        self.label_2.setGeometry(QtCore.QRect(240, 70, 91, 16))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_2.setFont(font)
+        self.label_2.setObjectName("label_2")
+        self.label_3 = QtWidgets.QLabel(self.widget)
+        self.label_3.setGeometry(QtCore.QRect(540, 70, 141, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_3")
+        self.label_4 = QtWidgets.QLabel(self.widget)
+        self.label_4.setGeometry(QtCore.QRect(850, 70, 131, 16))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.label_5 = QtWidgets.QLabel(self.widget)
+        self.label_5.setGeometry(QtCore.QRect(480, 320, 271, 20))
+        font = QtGui.QFont()
+        font.setFamily("Arial")
+        self.label_5.setFont(font)
+        self.label_5.setObjectName("label_5")
 
         self.retranslateUi(HomeWindow)
         QtCore.QMetaObject.connectSlotsByName(HomeWindow)
@@ -151,6 +175,10 @@ class Ui_HomeWindow(object):
         HomeWindow.setWindowTitle(_translate("HomeWindow", "Form"))
         self.load_image.setText(_translate("HomeWindow", "Load Images"))
         self.label.setText(_translate("HomeWindow", "Image Number"))
+        self.label_2.setText(_translate("HomeWindow", "Original Image"))
+        self.label_3.setText(_translate("HomeWindow", "Detected Objects"))
+        self.label_4.setText(_translate("HomeWindow", "Estimated Depths"))
+        self.label_5.setText(_translate("HomeWindow", "Joint Object Detection and Depth Estimation"))
 
 
 if __name__ == "__main__":

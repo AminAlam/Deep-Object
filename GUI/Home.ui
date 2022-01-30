@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1089</width>
-    <height>852</height>
+    <width>1153</width>
+    <height>871</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,8 +20,8 @@
    <property name="geometry">
     <rect>
      <x>0</x>
-     <y>-50</y>
-     <width>1091</width>
+     <y>-30</y>
+     <width>1201</width>
      <height>901</height>
     </rect>
    </property>
@@ -113,7 +113,7 @@ color: white;
    <widget class="QPushButton" name="load_image">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>50</x>
       <y>830</y>
       <width>113</width>
       <height>32</height>
@@ -126,25 +126,6 @@ color: white;
     </property>
     <property name="text">
      <string>Load Images</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="loaded_image_widget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>60</y>
-      <width>1031</width>
-      <height>271</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QWidget
-{
-    background-color: white;
-}
-
-
-</string>
     </property>
    </widget>
    <widget class="QSlider" name="image_slider">
@@ -182,9 +163,9 @@ color: white;
     <property name="geometry">
      <rect>
       <x>160</x>
-      <y>320</y>
+      <y>340</y>
       <width>831</width>
-      <height>471</height>
+      <height>451</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -213,6 +194,97 @@ color: white;
     </property>
     <property name="text">
      <string>Image Number</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="loaded_image_widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>100</y>
+      <width>1031</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QWidget
+{
+    background-color: white;
+}
+
+
+</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>70</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Original Image</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>540</x>
+      <y>70</y>
+      <width>141</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Detected Objects</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>70</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Estimated Depths</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>320</y>
+      <width>271</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Joint Object Detection and Depth Estimation</string>
     </property>
    </widget>
   </widget>
