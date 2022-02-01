@@ -657,7 +657,7 @@ You can see some test images in the Figure \ref{fig:DD_t_images}.
 We used two different methods for concatenating the object detector and depth estimator:
 
 
-\subsubsection{First Method}
+\subsection{First Method}
 	\vspace{0.3cm}
 
 In the first method, we used an auto-encoder network which was placed after the depth estimator and before the object detector. This AE's input was the estimated depth and was the detected objects and masks. This network was learned when both the other networks were frozen. You can see a schematic of this AE in Figure \ref{fig:AE}.
@@ -672,12 +672,58 @@ In the first method, we used an auto-encoder network which was placed after the 
 
 This method can perform well if we have large dataset and very fast computing hardware, but because of the small dataset and slow computing hardware, we couldn't fully train this model.
 
-\subsubsection{Second Method}
+\subsubsection{Evaluation}
+
+We used BLEU and perplexity metrics for evaluating functionality of the concatenator. You can see the perplexity of the training and validation in the Figure \ref{fig:perplexity} and definition of the perplexity of a probability distribution in \ref{eqn:perplexity}.
+
+\begin{eqnarray}
+PP(p) &= 2^{H(p)} = 2^{-\sum p(x)} \label{eqn:perplexity}
+\end{eqnarray}
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/perplexity.png}
+      \caption{Perplexity of Training and Validation}
+  \label{fig:perplexity}
+\end{figure}
+
+\newpage
+
+You can see BELU-1, 2, 3, and 4 metrics in Figure \ref{fig:BELU}.
+\begin{figure}[ht]
+  \centering
+  
+    \begin{subfigure}[b]{0.9\linewidth}
+    \includegraphics[width=\linewidth]{images/BELU-1.png}
+    \caption{BELU-1 Metric}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.9\linewidth}
+    \includegraphics[width=\linewidth]{images/BELU-2.png}
+    \caption{BELU-2 Metric}
+  \end{subfigure}
+      \begin{subfigure}[b]{0.9\linewidth}
+    \includegraphics[width=\linewidth]{images/BELU-3.png}
+    \caption{BELU-3 Metric}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.9\linewidth}
+    \includegraphics[width=\linewidth]{images/BELU-4.png}
+    \caption{BELU-4 Metric}
+  \end{subfigure}
+  
+      \caption{BELU Metrics}
+  \label{fig:BELU}
+\end{figure}
+
+
+\subsection{Second Method}
 	\vspace{0.3cm}
 
 In this method, there is just object detector and depth estimator. by thresholding on the depth estimator output, we split the detected objects to thee classes: Close, Middle, and Far.
 
+\subsubsection{Evaluation}
+	\vspace{0.3cm}
 
+Because in this method we perform concatenation by thresholding on the depths, there is no numerical metric for measuring performance, but you can see the final outputs of the network in the next pages.
 
 
 
