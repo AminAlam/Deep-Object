@@ -148,7 +148,7 @@
 \fancyhf{}
 
 \fancyhead[R]{\includegraphics[width=0.05\textwidth]{Shariflogo.png} }
-\fancyhead[L]{MohammadAmin \\ Alamalhoda}
+\fancyhead[L]{DeepLearning\\ Winter 2022}
 \cfoot{(\space \space \space \space \textbf{\thepage}  \space \space \space)}
 
 \renewcommand{\headrulewidth}{1pt}
@@ -343,7 +343,7 @@ As can be seen in Figure \ref{fig:sample_datas}, dataset contains image, label, 
 
 \subsection{Data Augmentation}
 	\vspace{0.3cm}
-We augmented the datas by resizing to 640, random cropping an 640$\times$640 square, and random horizontal flip. Some of the Augmented Images are plotted in Figure \ref{fig:augment}.
+We augmented the datas by resizing to 640, random cropping an 640$\times$640 square, and random horizontal flip. Some of the Augmented Images are plotted in Figure \ref{fig:augment}. It is noteworthy to mention that all the datas(images, labels, and depths) which have belong to a specific scene, should be augmented by same properties.
 
 
 
@@ -369,7 +369,7 @@ We used \textit{torch data loaders} for managing datas and augmentation. You can
 \subsection{Loading .mat Dataset}
 	\vspace{0.3cm}
 
-Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \text{mat2png()} which can be find in utils.py
+Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \text{mat2png} which can be find in utils.py
 
 
 \newpage
@@ -439,6 +439,13 @@ As mentioned earlier, we fine tuned the model by using our datas. You can see th
 \end{figure}
 
 
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/loss_OD_validation.png}
+      \caption{Validatoin Loss of the Object Detector Model}
+  \label{fig:loss_OD_validation}
+\end{figure}
+
 \subsubsection{Evaluation}
 	\vspace{0.3cm}
 
@@ -457,14 +464,14 @@ Therefore, we used different metrics for evaluating the object detector model wh
 \begin{table}[htp]
 \caption{Object Detection Metrics}
 \begin{center}
-\begin{tabular}{c | c | c}
-Metric & Initial Value & Final Value\\
+\begin{tabular}{c | c | c | c | c}
+Metric & Initial Value-Training & Final Value-Training& Initial Value-Validation & Final Value-Validation\\
 \hline
-Total loss &8.892 & 2.7060\\
-Classifier Loss & 3.902 & 1.4148\\
-Box Reg Loss& 2.023 & 0.6253\\
-Mask Loss & 1.834 & 0.4961\\
-Objectness Loss& 0.673 & 0.0435
+Total loss &8.892 & 2.7060 & 4.323 & 1.413\\
+Classifier Loss & 3.902 & 1.4148 & 1.032 & 0.242\\
+Box Reg Loss& 2.023 & 0.6253 & 1.231 & 0.321\\
+Mask Loss & 1.834 & 0.4961 & 0.891 & 0.214\\
+Objectness Loss& 0.673 & 0.0435 & 0.413 & 0.001
 \end{tabular}
 \end{center}
 \label{table:OD_Metrics}
@@ -539,19 +546,58 @@ You can see some test images in the Figure \ref{fig:OD_t_images}.
 \subsection{Depth Estimator}
 	\vspace{0.3cm}
 
+We used pretrained \textit{Intelisl MiDaS} as the depth estimation network and fine tuned it using our dataset. You can find the paper of \textit{MiDaS} using \href{https://arxiv.org/abs/1907.01341}{this link}.
+
+
+\subsubsection{Architecture}
+	\vspace{0.3cm}
 
 \subsubsection{Computation Pricedure}
 	\vspace{0.3cm}
 	
 	
+\newpage
+
 \subsubsection{Fine-Tuning}
 	\vspace{0.3cm}
-	
+
+
+
+As mentioned earlier, we fine tuned the model by using our datas. You can see the training loss plot in Figure \ref{fig:loss_DD}.
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/loss_DD.png}
+      \caption{Training Loss of the Depth Estimator Model}
+  \label{fig:loss_DD}
+\end{figure}
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/loss_DD_validation.png}
+      \caption{Vlidatoin Loss of the Depth Estimator Model}
+  \label{fig:loss_DD_validation}
+\end{figure}
+
 	
 \subsubsection{Evaluation}
 	\vspace{0.3cm}
 	
-\subsubsection{Architecture}
+Estimating depth of different pixels in an image is a regression problem, so we used MSE(mean squad error) as loss. You can see this loss values for training and validation in the Table \ref{table:DD_Metrics}.
+
+\begin{table}[htp]
+\caption{Depth Estimator Metrics}
+\begin{center}
+\begin{tabular}{c | c | c | c | c}
+Metric & Initial Value-Training & Final Value-Training &  Initial Value-Validation & Final Value-Validation\\
+\hline
+MSE loss &4.592 & 0.2060 & 6.234 & 0.124\\
+\end{tabular}
+\end{center}
+\label{table:DD_Metrics}
+\end{table}%
+
+
 
 
 \newpage
@@ -605,19 +651,31 @@ You can see some test images in the Figure \ref{fig:DD_t_images}.
 
 \newpage
 	
-\section{Connection between Object Detector and Depth Estimator}
+\section{Contacenator}
 	\vspace{0.3cm}
 
+We used two different methods for concatenating the object detector and depth estimator:
 
 
+\subsubsection{First Method}
+	\vspace{0.3cm}
+
+In the first method, we used an auto-encoder network which was placed after the depth estimator and before the object detector. This AE's input was the estimated depth and was the detected objects and masks. This network was learned when both the other networks were frozen. You can see a schematic of this AE in Figure \ref{fig:AE}.
 
 
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=1\linewidth]{images/AE.png}
+      \caption{Schematic of the AE used for Concatenating}
+  \label{fig:AE}
+\end{figure}
 
+This method can perform well if we have large dataset and very fast computing hardware, but because of the small dataset and slow computing hardware, we couldn't fully train this model.
 
+\subsubsection{Second Method}
+	\vspace{0.3cm}
 
-
-
-
+In this method, there is just object detector and depth estimator. by thresholding on the depth estimator output, we split the detected objects to thee classes: Close, Middle, and Far.
 
 
 

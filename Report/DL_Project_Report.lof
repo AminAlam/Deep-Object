@@ -3,5 +3,9 @@
 \contentsline {figure}{\numberline {3}{\ignorespaces Bounding Box Regression in the Mask-RCNN\relax }}{5}{figure.caption.6}%
 \contentsline {figure}{\numberline {4}{\ignorespaces A Schematic of the Mask-RCNN\relax }}{6}{figure.caption.7}%
 \contentsline {figure}{\numberline {5}{\ignorespaces Training Loss of the Object Detector Model\relax }}{7}{figure.caption.8}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Output of Object Detector Network for Some Test Images\relax }}{8}{figure.caption.10}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Output of Depth Estimator Network for Some Test Images\relax }}{10}{figure.caption.11}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Validatoin Loss of the Object Detector Model\relax }}{7}{figure.caption.9}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Output of Object Detector Network for Some Test Images\relax }}{8}{figure.caption.11}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Training Loss of the Depth Estimator Model\relax }}{10}{figure.caption.12}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Vlidatoin Loss of the Depth Estimator Model\relax }}{10}{figure.caption.13}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Output of Depth Estimator Network for Some Test Images\relax }}{11}{figure.caption.15}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Schematic of the AE used for Concatenating\relax }}{12}{figure.caption.16}%
