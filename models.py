@@ -81,15 +81,15 @@ class Concater(nn.Module):
         for i in range(10):
             center_x = int((prediction_OD[0]['boxes'][i,0]+prediction_OD[0]['boxes'][i,2])/2)
             center_y = int((prediction_OD[0]['boxes'][i,1]+prediction_OD[0]['boxes'][i,3])/2)
-            depth_value = prediction_DD[center_y, center_x].numpy()
-            if depth_value > 1.5*torch.mean(prediction_DD).numpy():
+            depth_value = prediction_DD[center_y, center_x].cpu().numpy()
+            if depth_value > 1.5*torch.mean(prediction_DD).cpu().numpy():
                 label = 'Close'
-            elif depth_value < 0.5*torch.mean(prediction_DD).numpy():
+            elif depth_value < 0.5*torch.mean(prediction_DD).cpu().numpy():
                 label = 'Far'
             else:
                 label = 'Middle'
             depth_percentage.append('{0:.2f} - {1}'.format(depth_value,label))
-        plot_img = torchvision.utils.draw_bounding_boxes(img, prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=24)
+        plot_img = torchvision.utils.draw_bounding_boxes(img.cpu(), prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=24)
         return plot_img.permute(1,2,0).cpu().numpy()
 
 

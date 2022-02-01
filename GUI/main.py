@@ -143,7 +143,7 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
         
     def OD_DD(self):
         self.depth_object_list = []
-        for img in self.images:
+        for ww, img in enumerate(self.images):
             img = transforms.ToTensor()(img)
             input_batch = self.resizer(img)
             input_batch = torch.unsqueeze(input_batch, 0)
@@ -173,6 +173,7 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
                     label = 'Middle'
                 depth_percentage.append('{0:.2f} - {1}'.format(depth_value,label))
             plot_img = torchvision.utils.draw_bounding_boxes(img, prediction_OD[0]['boxes'][0:10,:], colors="red", labels=depth_percentage, font_size=14)
+            plt.imsave("Final_DO_test_{}.png".format(ww+1), plot_img.permute(1,2,0).cpu().numpy())
             self.depth_object_list.append(plot_img.permute(1,2,0).cpu().numpy())
 
 
