@@ -99,17 +99,20 @@ class Main(QtWidgets.QMainWindow, Ui_HomeWindow):
         self.image_slider.valueChanged.connect(self.plot_images)
 
     def LoadImage(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
-        files, _ = QFileDialog.getOpenFileNames(self, "Load File", "", "Image Files (*.png *.jpg *.jpeg)", options=options)
-        self.images = []
-        for file in files:
-            self.images.append(Image.open(file).convert("RGB"))
-        self.Slider_Init(len(self.images))
-        self.OD()
-        self.DD()
-        self.OD_DD()
-        self.plot_images()
+        try:
+            options = QFileDialog.Options()
+            options |= QFileDialog.DontUseNativeDialog
+            files, _ = QFileDialog.getOpenFileNames(self, "Load File", "", "Image Files (*.png *.jpg *.jpeg)", options=options)
+            self.images = []
+            for file in files:
+                self.images.append(Image.open(file).convert("RGB"))
+            self.Slider_Init(len(self.images))
+            self.OD()
+            self.DD()
+            self.OD_DD()
+            self.plot_images()
+        except:
+            pass
 
     def OD(self):
         self.objects_list = []
