@@ -377,7 +377,7 @@ Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels
 	
 \section{Models}
 	\vspace{0.3cm}
-\subsection{Object Detection}
+\subsection{Object Detector}
 	\vspace{0.3cm}
 
 We used pretrained \textit{Mask-RCNN} as the object detector network and fine tuned it using our dataset. You can find the paper of \textit{Mask-RCNN} using \href{https://arxiv.org/pdf/1703.06870.pdf}{this link}.
@@ -444,12 +444,18 @@ As mentioned earlier, we fine tuned the model by using our datas. You can see th
 
 
 
+Evaluating object detection models is not straightforward because each image can have many objects and each object can belong to different classes. This means that we need to measure if the model found all the objects and also a way to verify if the found objects belong to the correct class. This means that an object detection model needs to accomplish two things
 
+\begin{itemize}
+\item Find all the objects in an image
+\item Check if the found objects belong to the correct class
+\end{itemize}
 
+Therefore, we used different metrics for evaluating the object detector model which are written in Table \ref{table:OD_Metrics}:
 
 
 \begin{table}[htp]
-\caption{default}
+\caption{Object Detection Metrics}
 \begin{center}
 \begin{tabular}{c | c | c}
 Metric & Initial Value & Final Value\\
@@ -461,18 +467,146 @@ Mask Loss & 1.834 & 0.4961\\
 Objectness Loss& 0.673 & 0.0435
 \end{tabular}
 \end{center}
-\label{default}
+\label{table:OD_Metrics}
 \end{table}%
 
 
+\newpage
+
+\subsubsection{Test Images}
+	\vspace{0.3cm}
+	
+You can see some test images in the Figure \ref{fig:OD_t_images}.
+
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_1.png}
+    \caption{Image No 1}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_2.png}
+    \caption{Image No 2}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_3.png}
+    \caption{Image No 3}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_4.png}
+    \caption{Image No 4}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_5.png}
+    \caption{Image No 5}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_6.png}
+    \caption{Image No 6}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_7.png}
+    \caption{Image No 7}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_8.png}
+    \caption{Image No 8}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_9.png}
+    \caption{Image No 9}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_10.png}
+    \caption{Image No 10}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_11.png}
+    \caption{Image No 11}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/OD_test_12.png}
+    \caption{Image No 12}
+  \end{subfigure}
+  \caption{Output of Object Detector Network for Some Test Images}
+  \label{fig:OD_t_images}
+\end{figure}
 
 
+	
+\newpage
+
+\subsection{Depth Estimator}
+	\vspace{0.3cm}
 
 
+\subsubsection{Computation Pricedure}
+	\vspace{0.3cm}
+	
+	
+\subsubsection{Fine-Tuning}
+	\vspace{0.3cm}
+	
+	
+\subsubsection{Evaluation}
+	\vspace{0.3cm}
+	
+\subsubsection{Architecture}
 
 
+\newpage
 
+\subsubsection{Test Images}
+	\vspace{0.3cm}
+	
+You can see some test images in the Figure \ref{fig:DD_t_images}.
 
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_img_1.png}
+    \caption{Image No 1}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_test_1.png}
+    \caption{Depth of Image No 1}
+  \end{subfigure}
+  
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_img_2.png}
+    \caption{Image No 2}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_test_2.png}
+    \caption{Depth of  Image No 2}
+  \end{subfigure}
+  
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_img_3.png}
+    \caption{Image No 3}
+  \end{subfigure}
+    \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_test_3.png}
+    \caption{Depth of Image No 3}
+  \end{subfigure}
+  
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_img_4.png}
+    \caption{Image No 4}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.3\linewidth}
+    \includegraphics[width=\linewidth]{images/DD_test_4.png}
+    \caption{Depth of Image No 4}
+  \end{subfigure}
+  
+  \caption{Output of Depth Estimator Network for Some Test Images}
+  \label{fig:DD_t_images}
+\end{figure}
+
+\newpage
+	
+\section{Connection between Object Detector and Depth Estimator}
+	\vspace{0.3cm}
 
 
 
