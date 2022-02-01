@@ -217,6 +217,11 @@ This project needs the following stuff in order to be compiled successfully.
 
 \end{itemize}
 
+You can install the required dependencies by running:
+
+\begin{lstlisting}[language=bash]
+  $ pip install -r requirements.txt
+  \end{lstlisting}
 
 
 \newpage
@@ -369,7 +374,7 @@ We used \textit{torch data loaders} for managing datas and augmentation. You can
 \subsection{Loading .mat Dataset}
 	\vspace{0.3cm}
 
-Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \text{mat2png} which can be find in utils.py
+Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \code{mat2png} which can be find in \code{utils.py}.
 
 
 \newpage
@@ -820,14 +825,63 @@ You can see some test images in Figures \ref{fig:DO_t_images1}, \ref{fig:DO_t_im
   \label{fig:DO_t_images4}
 \end{figure}
 
+\newpage
 
+\section{GUI}
+	\vspace{0.3cm}
+	
+We designed a graphical user interface for using the network easily. You can load images to this app and then see the outputs of the network
 
+\subsection{Installation}
+	\vspace{0.3cm}
+This app is placed in \code{./GUI} folder. You should first install dependencies and the run it using:
+\begin{lstlisting}[language=bash]
+  $ python3 GUI/main.py
+  \end{lstlisting}
+  
+  \subsection{App Enviornment}
+	\vspace{0.3cm}
+  
+  
+  \begin{figure}[ht]
+  \centering
+    \begin{subfigure}[b]{0.6\linewidth}
+    \includegraphics[width=\linewidth]{images/GUI1.png}
+    \caption{GUI Before Loading any Image}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.6\linewidth}
+    \includegraphics[width=\linewidth]{images/GUI2.png}
+    \caption{GUI After Loading Some Images}
+  \end{subfigure}
+  
+      \caption{GUI Different Parts}
+  \label{fig:GUI1}
+\end{figure}
+  
 
+You can see instructions for labeled parts in the Figure \ref{fig:GUI1} in the Table \ref{table:GUI1}.
 
+\newpage
 
+\begin{table}[htp]
+\caption{GUI Instruction Table}
+\begin{center}
+\begin{tabular}{c | c }
+Label &Explanation \\
+\hline
+Label 1 & This plot will show the original loaded image \\
+Label 2 & This plot will show the detected objects from the loaded image \\
+Label 3 & This plot will show the estimated depths of the loaded image \\
+Label 4 & This plot will show the final output of the loaded image \\
+Label 5 & This button is used for loading images\\
+Label 6 & By using this slider you can change the plotted image \\
+\end{tabular}
+\end{center}
+\label{table:GUI1}
+\end{table}%
 
-
-
+It is noteworthy to mention that you can load more than 1 image using this app. Also, you should download the pretrained models before using the app. 
+ 
 
 
 
