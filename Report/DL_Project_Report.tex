@@ -136,13 +136,10 @@
 {
   \hypersetup{linkcolor=black}
   \tableofcontents
-}
-
-{
-  \hypersetup{linkcolor=black}
-  \listoffigures
+    \listoffigures
   \listoftables
 }
+
 
 
 \fancyhf{}
@@ -742,7 +739,7 @@ In the first method, we used an auto-encoder network which was placed after the 
 This method can perform well if we have large dataset and very fast computing hardware, but because of the small dataset and slow computing hardware, we couldn't fully train this model.
 
 \subsubsection{Evaluation}
-
+	\vspace{0.3cm}
 We used BLEU and perplexity metrics for evaluating functionality of the concatenator. You can see the perplexity of the training and validation in the Figure \ref{fig:perplexity} and definition of the perplexity of a probability distribution in \ref{eqn:perplexity}.
 
 \begin{eqnarray}
@@ -752,7 +749,7 @@ PP(p) &= 2^{H(p)} = 2^{-\sum p(x)} \label{eqn:perplexity}
 \begin{figure}[ht]
   \centering
     \includegraphics[width=1\linewidth]{images/perplexity.png}
-      \caption{Perplexity of Training and Validation}
+      \caption{Perplexity of Training and Validation (Lower is better)}
   \label{fig:perplexity}
 \end{figure}
 
@@ -779,7 +776,7 @@ You can see BELU-1, 2, 3, and 4 metrics in Figure \ref{fig:BELU}.
     \caption{BELU-4 Metric}
   \end{subfigure}
   
-      \caption{BELU Metrics}
+      \caption{BELU Metrics (Higher is better)}
   \label{fig:BELU}
 \end{figure}
 
