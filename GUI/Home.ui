@@ -287,6 +287,24 @@ color: white;
      <string>Joint Object Detection and Depth Estimation</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>411</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Apple SD Gothic Neo</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Deep Learning Project - Joint Depth Estimation and Object Detection</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

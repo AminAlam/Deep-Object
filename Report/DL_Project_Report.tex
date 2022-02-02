@@ -136,13 +136,10 @@
 {
   \hypersetup{linkcolor=black}
   \tableofcontents
-}
-
-{
-  \hypersetup{linkcolor=black}
-  \listoffigures
+    \listoffigures
   \listoftables
 }
+
 
 
 \fancyhf{}
@@ -217,6 +214,11 @@ This project needs the following stuff in order to be compiled successfully.
 
 \end{itemize}
 
+You can install the required dependencies by running:
+
+\begin{lstlisting}[language=bash]
+  $ pip install -r requirements.txt
+  \end{lstlisting}
 
 
 \newpage
@@ -369,7 +371,7 @@ We used \textit{torch data loaders} for managing datas and augmentation. You can
 \subsection{Loading .mat Dataset}
 	\vspace{0.3cm}
 
-Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \text{mat2png} which can be find in utils.py
+Due to RAM shortage, we didn't load the datas on the RAM. All the images, labels and depths in .mat file were converted to .png images and the loaded directly from the hard drive during training. This was done using function \code{mat2png} which can be find in \code{utils.py}.
 
 
 \newpage
@@ -403,7 +405,7 @@ To fix the misalignment, proposed a simple, quantization-free layer, called RoIA
 Mask R-CNN is conceptually simple: Faster R-CNN has two outputs for each candidate object, a class label, and a bounding-box offset; to this, we add a third branch that outputs the object mask. Mask R-CNN is thus a natural and intuitive idea. But the additional mask output is distinct from the class and box outputs, requiring extraction of an object's much finer spatial layout. Next, we introduce the key elements of Mask R-CNN, including pixel-to-pixel alignment, which is the main missing piece of Fast/Faster R-CNN.
 \newpage
 
-\subsubsection{Computation Pricedure}
+\subsubsection{Computation Procedure}
 	\vspace{0.3cm}
 	
 Mask R-CNN adopts the same two-stage procedure, with an identical first stage (RPN). In parallel to predicting the class and box offset in the second stage, Mask R-CNN also outputs a binary mask for each RoI. This contrasts with most recent systems, where classification depends on mask predictions. Our approach follows the spirit of Fast R-CNN that applies bounding-box classification and regression in parallel (which turned out to largely simplify the multi-stage pipeline of original R-CNN). Formally, during training, we define a multi-task loss on each sampled RoI as:
@@ -548,14 +550,78 @@ You can see some test images in the Figure \ref{fig:OD_t_images}.
 
 We used pretrained \textit{Intelisl MiDaS} as the depth estimation network and fine tuned it using our dataset. You can find the paper of \textit{MiDaS} using \href{https://arxiv.org/abs/1907.01341}{this link}.
 
+Depth estimation of an image predicts the order of objects (if the image was expanded in a 3D format) from the 2D image itself. It is an unequivocally difficult task since getting annotated data and datasets specializing in this area was a mammoth task itself.
+MiDaS is a machine learning model that estimates depth from an arbitrary input image. More specifically, MiDaS computes relative inverse depth from a single image.
+
+
 
 \subsubsection{Architecture}
 	\vspace{0.3cm}
+	
+Various datasets containing depth information are not compatible in terms of scale and bias. This is due to the diversity of measuring tools, including stereo cameras, laser scanners, and light sensors. MiDaS introduces a new loss function that absorbs these diversities, thereby eliminating compatibility issues and allowing multiple data sets to be used for training simultaneously.
+MiDaS developers firmly assert that training models on a single dataset will not be robust when dealing with problem statements encompassing real-life issues. When models used in real-time are created, they should be robust enough to deal with as many situations and outliers as possible. Therefore, they decide to train their model on multiple datasets, as shown in the table below. Therefore, it can estimate the depth of images in various conditions and environments. 
+The idea seems very ingenious, but they had to carefully devise loss functions and consider the challenges accompanying the choice of using multiple datasets. Since these datasets had different representations of depth estimation to varying degrees, an inherent scale ambiguity, and shift ambiguity come up, as the paper’s authors addressed.
+Now, since the datasets in all probability would follow distributions different from each other. Hence the issues are pretty much expected. However, the authors propose solutions to each of the challenges. The end product was a robust depth estimator, which was as efficient as accurate. Figure \ref{fig:midas1} illustrates some results shown in the paper.
+The idea of cross dataset learning isn’t new, but the complications that arise from getting the ground truths to a common output space are extremely tough to get by. However, the paper explains each step extensively, starting with the intuition right to the mathematical definition of the losses used.
 
-\subsubsection{Computation Pricedure}
-	\vspace{0.3cm}
-	
-	
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=0.8\linewidth]{images/midas1.png}
+      \caption{Comparison of Depth Estimation Models Trained on Different Combinations of Datasets }
+  \label{fig:midas1}
+\end{figure}
+
+\newpage
+
+\subsubsection{Loss Function}
+		\vspace{0.3cm}
+		
+		
+MiDaS has developed a novel loss functions that are invariant to the major sources of incompatibility between datasets, including unknown and inconsistent scale and baselines. MiDaS losses enable training on data that was acquired with diverse sensing modalities such as stereo cameras with potentially unknown calibration, laser scanners, and structured light sensors. MiDaS also quantify the value of a variety of existing datasets for monocular depth estimation and explore optimal strategies for mixing datasets during training. They show that a principled approach based on multi-objective optimization leads to improved results compared to a naive mixing strategy.
+As mentioned above, training models for monocular depth estimation on diverse datasets presents a challenge because the ground truth comes in different forms, see Figure \ref{fig:midas2} and Equations \ref{eqn:loss1}, \ref{eqn:loss2}, \ref{eqn:loss3}, and \ref{eqn:loss4}. So, MiDaS designers had  to design a loss function that is flexible enough to handle diverse sources of data while making optimal use of all available information. More specifically they proposed loss functions must solve theses major challenges:
+
+\begin{itemize}
+\item Inherently different representations of depth: direct vs. inverse depth representations.
+\item Scale ambiguity: for some data sources, depth is only given up to an unknown scale. 
+\item Shift ambiguity: some datasets provide disparity only up to an unknown scale and global disparity shift that is a function of the unknown baseline and a horizontal shift of the principal points due to post-processing 
+\end{itemize}
+
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=0.8\linewidth]{images/midas2.png}
+      \caption{Different Midas Losses and Their Performance on Different Datasets
+}
+  \label{fig:midas2}
+\end{figure}
+
+
+\begin{eqnarray}
+\mathcal{L}_{ssi} =& \frac{1}{2M} \sum_{i=1}^{M} p(\hat{\mathbf{d}}-\hat{\mathbf{d}}^{*}) \label{eqn:loss1} \\ 
+\mathcal{L}_{reg} =& \frac{1}{M} \sum_{k=K}^{M} \sum_{i=1}^{M}(|\nabla_x R_i^k|+|\nabla_y R_i^k|)  \label{eqn:loss2} \\
+\mathcal{L}_{silog} =& min\;\frac{1}{2M} \sum_{i=1}^{M} (\log(e^2z_i)-\log{z_i^*})^2  \label{eqn:loss3} \\
+\mathcal{L}_{ssitrim} =&\frac{1}{2M} \sum_{j=1}^{U_m} p_{mae}(\hat{\mathbf{d}}_j - \hat{\mathbf{d}}_j^*)  \label{eqn:loss4} \\
+\mathcal{L}_{l} =& \frac{1}{N_{l}} \sum_{n=1}^{N_{l}} \mathcal{L}_{s s i}\left(\hat{\mathbf{d}}^{n},\left(\hat{\mathbf{d}}^{*}\right)^{n}\right)+\alpha \mathcal{L}_{r e g}\left(\hat{\mathbf{d}}^{n},\left(\hat{\mathbf{d}}^{*}\right)^{n}\right)  \label{eqn:loss5} 
+\end{eqnarray}
+
+
+Due to the performance of $\mathcal{L}_{ssi}$ and $\mathcal{L}_{reg}$ (Figure \ref{fig:midas2}), MiDaS designers used $\mathcal{L}_{l}$ as the loss term (Equation \ref{eqn:loss5}).
+\newpage
+		
+\subsubsection{Encoders}
+		\vspace{0.3cm}
+		
+MiDaS designers have tested ResNet-50, ResNet-101, DenseNet-161, ResNeXt-101, and ResNeXt-101-WSL. All these encoders were pretrained on ImageNet. They observe that a significant performance boost is achieved by using better encoders. Higher-capacity encoders perform better than the baseline. 
+In general, we find that ImageNet performance of an encoder is a strong predictor for its performance in monocular depth estimation. This is very interesting, since advancements made in image classification can directly yield gains in robust monocular depth estimation. You can see relevant performance of different encoders in Figure \ref{fig:midas3}
+		
+		
+\begin{figure}[ht]
+  \centering
+    \includegraphics[width=0.8\linewidth]{images/midas3.png}
+      \caption{Relative Performance of Different Encoders Across Datasets (higher is better). ImageNet Performance of an Encoder is Predictive of its Performance in Monocular Depth Estimation.}
+  \label{fig:midas3}
+\end{figure}
+		
+		
 \newpage
 
 \subsubsection{Fine-Tuning}
@@ -651,7 +717,7 @@ You can see some test images in the Figure \ref{fig:DD_t_images}.
 
 \newpage
 	
-\section{Contacenator}
+\section{Concatenator}
 	\vspace{0.3cm}
 
 We used two different methods for concatenating the object detector and depth estimator:
@@ -673,7 +739,7 @@ In the first method, we used an auto-encoder network which was placed after the 
 This method can perform well if we have large dataset and very fast computing hardware, but because of the small dataset and slow computing hardware, we couldn't fully train this model.
 
 \subsubsection{Evaluation}
-
+	\vspace{0.3cm}
 We used BLEU and perplexity metrics for evaluating functionality of the concatenator. You can see the perplexity of the training and validation in the Figure \ref{fig:perplexity} and definition of the perplexity of a probability distribution in \ref{eqn:perplexity}.
 
 \begin{eqnarray}
@@ -683,7 +749,7 @@ PP(p) &= 2^{H(p)} = 2^{-\sum p(x)} \label{eqn:perplexity}
 \begin{figure}[ht]
   \centering
     \includegraphics[width=1\linewidth]{images/perplexity.png}
-      \caption{Perplexity of Training and Validation}
+      \caption{Perplexity of Training and Validation (Lower is better)}
   \label{fig:perplexity}
 \end{figure}
 
@@ -710,7 +776,7 @@ You can see BELU-1, 2, 3, and 4 metrics in Figure \ref{fig:BELU}.
     \caption{BELU-4 Metric}
   \end{subfigure}
   
-      \caption{BELU Metrics}
+      \caption{BELU Metrics (Higher is better)}
   \label{fig:BELU}
 \end{figure}
 
@@ -718,7 +784,7 @@ You can see BELU-1, 2, 3, and 4 metrics in Figure \ref{fig:BELU}.
 \subsection{Second Method}
 	\vspace{0.3cm}
 
-In this method, there is just object detector and depth estimator. by thresholding on the depth estimator output, we split the detected objects to thee classes: Close, Middle, and Far.
+In this method, there is just object detector and depth estimator. by thresholding on the on the depth of each detected object, we split the detected objects to thee classes: Close, Middle, and Far.
 
 \subsubsection{Evaluation}
 	\vspace{0.3cm}
@@ -820,14 +886,63 @@ You can see some test images in Figures \ref{fig:DO_t_images1}, \ref{fig:DO_t_im
   \label{fig:DO_t_images4}
 \end{figure}
 
+\newpage
 
+\section{GUI}
+	\vspace{0.3cm}
+	
+We designed a graphical user interface for using the network easily. You can load images to this app and then see the outputs of the network
 
+\subsection{Installation}
+	\vspace{0.3cm}
+This app is placed in \code{./GUI} folder. You should first install dependencies and the run it using:
+\begin{lstlisting}[language=bash]
+  $ python3 GUI/main.py
+  \end{lstlisting}
+  
+  \subsection{App Enviornment}
+	\vspace{0.3cm}
+  
+  
+  \begin{figure}[ht]
+  \centering
+    \begin{subfigure}[b]{0.6\linewidth}
+    \includegraphics[width=\linewidth]{images/GUI1.png}
+    \caption{GUI Before Loading any Image}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.6\linewidth}
+    \includegraphics[width=\linewidth]{images/GUI2.png}
+    \caption{GUI After Loading Some Images}
+  \end{subfigure}
+  
+      \caption{GUI Different Parts}
+  \label{fig:GUI1}
+\end{figure}
+  
 
+You can see instructions for labeled parts in the Figure \ref{fig:GUI1} in the Table \ref{table:GUI1}.
 
+\newpage
 
+\begin{table}[htp]
+\caption{GUI Instruction Table}
+\begin{center}
+\begin{tabular}{c | c }
+Label &Explanation \\
+\hline
+Label 1 & This plot will show the original loaded image \\
+Label 2 & This plot will show the detected objects from the loaded image \\
+Label 3 & This plot will show the estimated depths of the loaded image \\
+Label 4 & This plot will show the final output of the loaded image \\
+Label 5 & This button is used for loading images\\
+Label 6 & By using this slider you can change the plotted image \\
+\end{tabular}
+\end{center}
+\label{table:GUI1}
+\end{table}%
 
-
-
+It is noteworthy to mention that you can load more than 1 image using this app. Also, you should download the pretrained models before using the app. 
+ 
 
 
 

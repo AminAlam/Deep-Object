@@ -166,6 +166,12 @@ class Ui_HomeWindow(object):
         font.setFamily("Arial")
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
+        self.label_6 = QtWidgets.QLabel(self.widget)
+        self.label_6.setGeometry(QtCore.QRect(10, 30, 411, 20))
+        font = QtGui.QFont()
+        font.setFamily("Apple SD Gothic Neo")
+        self.label_6.setFont(font)
+        self.label_6.setObjectName("label_6")
 
         self.retranslateUi(HomeWindow)
         QtCore.QMetaObject.connectSlotsByName(HomeWindow)
@@ -179,6 +185,7 @@ class Ui_HomeWindow(object):
         self.label_3.setText(_translate("HomeWindow", "Detected Objects"))
         self.label_4.setText(_translate("HomeWindow", "Estimated Depths"))
         self.label_5.setText(_translate("HomeWindow", "Joint Object Detection and Depth Estimation"))
+        self.label_6.setText(_translate("HomeWindow", "Deep Learning Project - Joint Depth Estimation and Object Detection"))
 
 
 if __name__ == "__main__":
