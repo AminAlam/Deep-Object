@@ -1,6 +1,6 @@
 # Deep-Object
 ## What is this?
-This is a deep neural network which performs joint object detection and depth estimation.
+This project implements two concatenated deep neural networks which perform joint object detection and depth estimation.
 We used [Mask R-CNN](https://arxiv.org/pdf/1703.06870.pdf) for object detection network, and [MiDaS](https://arxiv.org/abs/1907.01341) network for depth estimation.
 ## Dependencies
 You can install the dependencies by running: `pip install -r requirements.txt`
