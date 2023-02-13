@@ -20,28 +20,28 @@ We used following transforms as augmentation:
 ### Loss and Metric Plots
 #### Object Detector
 ##### Training
-![Training Loss](http://ee.sharif.edu/~amin/static/Deep/loss_OD.png)
+![Training Loss](https://github.com/AminAlam/Deep-Object/blob/main/other_files/loss_OD.png)
 ##### Validation
-![Validation Accuracy](http://ee.sharif.edu/~amin/static/Deep/loss_OD_validation.png)
+![Validation Accuracy](https://github.com/AminAlam/Deep-Object/blob/main/other_files/loss_OD_validation.png)
 
 #### Depth Estimator
 ##### Training
-![Training Loss](http://ee.sharif.edu/~amin/static/Deep/loss_DD.png)
+![Training Loss](https://github.com/AminAlam/Deep-Object/blob/main/other_files/loss_DD.png)
 ##### Validation
-![Validation Accuracy](http://ee.sharif.edu/~amin/static/Deep/loss_DD_validation.png)
+![Validation Accuracy](https://github.com/AminAlam/Deep-Object/blob/main/other_files/loss_DD_validation.png)
 
 #### Joint Object Detection and Depth Estimation BELU
-| ![BELU-1](http://ee.sharif.edu/~amin/static/Deep/BELU-1.png) | ![BELU-2](http://ee.sharif.edu/~amin/static/Deep/BELU-2.png) |
+| ![BELU-1](https://github.com/AminAlam/Deep-Object/blob/main/other_files/BELU-1.png) | ![BELU-2](https://github.com/AminAlam/Deep-Object/blob/main/other_files/BELU-2.png) |
 | ------------- |-------------|
-| ![BELU-3](http://ee.sharif.edu/~amin/static/Deep/BELU-3.png) | ![BELU-4](http://ee.sharif.edu/~amin/static/Deep/BELU-4.png) |
+| ![BELU-3](https://github.com/AminAlam/Deep-Object/blob/main/other_files/BELU-3.png) | ![BELU-4](https://github.com/AminAlam/Deep-Object/blob/main/other_files/BELU-4.png) |
 
 ## Testing
 
 You can see some test images in the following plots:
 | Etimated Depth  | Detected Objects with Estimated Depth|
 | ------------- |-------------|
-| ![Img Depth 1](http://ee.sharif.edu/~amin/static/Deep/Final_DD_test_1.png) | ![Img 2](http://ee.sharif.edu/~amin/static/Deep/Final_DO_test_1.png) |
-| ![Img Depth 1](http://ee.sharif.edu/~amin/static/Deep/Final_DD_test_7.png) | ![Img Depth 2](http://ee.sharif.edu/~amin/static/Deep/Final_DO_test_7.png) |
+| ![Img Depth 1](https://github.com/AminAlam/Deep-Object/blob/main/other_files/Final_DD_test_1.png) | ![Img 2](https://github.com/AminAlam/Deep-Object/blob/main/other_files/Final_DO_test_1.png) |
+| ![Img Depth 1](https://github.com/AminAlam/Deep-Object/blob/main/other_files/Final_DD_test_7.png) | ![Img Depth 2](https://github.com/AminAlam/Deep-Object/blob/main/other_files/Final_DO_test_7.png) |
 
 ## GUI
 You can use the networks by GUI. First, install the depenedncies and the run the follosing command from the project main directory:
